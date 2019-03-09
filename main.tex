@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=1.5cm}
+
+\title{Final Year Project Report}
+\author{txs799 }
+\date{March 2019}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+\subsection{Bayesian networks}
+\subsection{CNF}
+\subsection{Model Counting and Weighted Model Counting}
+
+\section{Why can we encode BN as CNF}
+
+\section{The evolution of encodings}
+\subsection{Full Encoding}
+Given a Bayesian Network, two types of variables are generated.\\
+Define the variables generated from Node \textbf{\textit{X}} as Indicator Variables.
+For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\lambda_x$ define the indicator variable. \\
+Define the variables generated form Node \textbf{\textit{X}} and its parents \textbf{Y} = {$Y_{1}$, ... $Y_{n}$} as Parameter Variables.
+For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\theta_{X|Y}$ denotes the parameter variable.\\
+Obtaining indicator clauses \textsc{I}:\\
+For each node \textit{X} in a Bayesian Network with probability \{$x_{1}$,... ,$x_{n}$\} $\in$ \textit{X}, the following clauses are generated:
+$$\lambda_{x_{1}} \vee ... \vee \lambda_{x_{n}}$$
+$$\lambda-{x_{1}}$$
+\subsection{An improvement of Full Encoding}
+
+\subsection{Improved Encoding}
+
+\subsection{Group Encoding}
+\subsubsection{The idea of simplification by preprocessing the CNF}
+\subsection{The idea of QM Algorithm}
+\subsection{An extension of How the multievel simplification }
+
+
+\end{document}
