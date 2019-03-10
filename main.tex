@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
+\usepackage{amsmath}
 \geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=1.5cm}
 
 \title{Final Year Project Report}
@@ -20,16 +21,47 @@
 
 \section{The evolution of encodings}
 \subsection{Full Encoding}
+\subsubsection{Generating CNFs}
 Given a Bayesian Network, two types of variables are generated.\\
 Define the variables generated from Node \textbf{\textit{X}} as Indicator Variables.
 For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\lambda_x$ define the indicator variable. \\
 Define the variables generated form Node \textbf{\textit{X}} and its parents \textbf{Y} = {$Y_{1}$, ... $Y_{n}$} as Parameter Variables.
 For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\theta_{X|Y}$ denotes the parameter variable.\\
-Obtaining indicator clauses \textsc{I}:\\
+\textbf{Obtaining indicator clauses \textsc{I}:}\\
 For each node \textit{X} in a Bayesian Network with probability \{$x_{1}$,... ,$x_{n}$\} $\in$ \textit{X}, the following clauses are generated:
-$$\lambda_{x_{1}} \vee ... \vee \lambda_{x_{n}}$$
-$$\lambda-{x_{1}}$$
+\begin{equation}\label{fullenc_ic1}
+    \lambda_{x_{1}} \vee ... \vee \lambda_{x_{n}}
+\end{equation}
+
+\begin{equation}\label{eq:fullenc_ic2}
+    \neg\lambda_{x_{i}} \vee \neg\lambda_{x_{j}}, \;\;\; \mbox{for each i $\neq$ j}
+\end{equation}
+According to the commutation of logic OR, $R \vee Q$ $\Longleftrightarrow$ $Q \vee R$, to avoid redundant clauses, \ref{eq:fullenc_ic2} can be simplified as :
+\begin{equation}\label{fullenc_ic3}
+    \neg\lambda_{x_{i}} \vee \neg\lambda_{x_{j}}, \;\;\; \mbox{for each i $<$ j}
+\end{equation}
+\textbf{Obtaining parameter clauses \textsc{P}:}\\
+For each node \textbf{\textit{X}} in a Bayesian Network and its parents \textbf{\textit{Y}}, the following clauses are generated:
+\begin{equation}\label{fullenc_pc1}
+    \lambda_{x_{i}} \wedge \lambda_{y_{1}} \wedge... \wedge \lambda_{y_{m}} \leftrightarrow \theta_{x_{i}|y_{1}..y{m}}
+\end{equation}
+The following equation is the equivalent of \ref{fullenc_pc1} written in the way that meet the requirement of CNF.
+\begin{equation}\label{fullenc_IP}
+    \neg\lambda_{x_{i}} \vee \neg\lambda_{y_{1}} \vee... \vee \neg\lambda_{y_{m}} \vee \theta_{x_{i}|y_{1}..y_{m}}
+\end{equation}
+\begin{equation}\label{fullenc_PI}
+    \neg\theta_{x_{i}|y_{1}..y_{m}} \vee \lambda_{x_{i}},\\ \;\;
+    \neg\theta_{x_{i}|y_{1}..y_{m}} \vee \lambda_{y_{j}} \;\; \mbox{ j = 1, ..., m}
+\end{equation}
+%% Here should be the example with BN asia
+\subsubsection{Assigning Weights}
+% how weights are assigned
 \subsection{An improvement of Full Encoding}
+\subsubsection{A node with cardinality = 2}
+Now consider the node with cardinality 2. Take an Example in asia network, node \textit{smoker} has two possibilty \textit{Yes} and \textit{No}, so according to \ref{fullenc_ic1}, we have $\lambda_{smoker_{yes}} \vee \lambda_{smoker_{no}}$ and this will always be 1, and the same apply for \ref{fullenc_ic3}: $\neg\lambda_{smoker_{yes}} \vee \neg\lambda_{smoker_{no}}$\\
+\textit{\textbf{Simplification step 1:}} If the cardinality of a node in a Bayesian Network is 2, ommit the clause in \ref{fullenc_ic1} and \ref{fullenc_ic3} in \textit{3.1 Full Encoding}.
+
+\subsubsection{Parameter variable = 1 or parameter variable = 0}
 
 \subsection{Improved Encoding}
 
