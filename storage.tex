@@ -1,0 +1,197 @@
+
+
+\section{The evolution of encodings}
+\subsection{Full Encoding}
+\subsubsection{Generating CNFs}
+Given a Bayesian Network, two types of variables are generated.\\
+Define the variables generated from Node \textbf{\textit{X}} as Indicator Variables.
+For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\lambda_x$ define the indicator variable. \\
+Define the variables generated form Node \textbf{\textit{X}} and its parents \textbf{Y} = {$Y_{1}$, ... $Y_{n}$} as Parameter Variables.
+For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\theta_{X|Y}$ denotes the parameter variable.\\
+\textbf{Obtaining indicator clauses \textsc{I}:}\\
+For each node \textit{X} in a Bayesian Network with probability \{$x_{1}$,... ,$x_{n}$\} $\in$ \textit{X}, the following clauses are generated:
+% Indicator Clauses and Parameter Clauses
+\begin{equation}\label{fullenc_ic1}
+    \lambda_{x_{1}} \vee ... \vee \lambda_{x_{n}}
+\end{equation}
+
+\begin{equation}\label{eq:fullenc_ic2}
+    \neg\lambda_{x_{i}} \vee \neg\lambda_{x_{j}}, \;\;\; \mbox{for each i $\neq$ j}
+\end{equation}
+According to the commutation of logic OR, $R \vee Q$ $\Longleftrightarrow$ $Q \vee R$, to avoid redundant clauses, \ref{eq:fullenc_ic2} can be simplified as :
+\begin{equation}\label{fullenc_ic3}
+    \neg\lambda_{x_{i}} \vee \neg\lambda_{x_{j}}, \;\;\; \mbox{for each i $<$ j}
+\end{equation}
+
+% parameter clauses
+\textbf{Obtaining parameter clauses \textsc{P}:}\\
+For each node \textbf{\textit{X}} in a Bayesian Network and its parents \textbf{\textit{Y}}, the following clauses are generated:
+\begin{equation}\label{fullenc_pc1}
+    \lambda_{x_{i}} \wedge \lambda_{y_{1}} \wedge... \wedge \lambda_{y_{m}} \leftrightarrow \theta_{x_{i}|y_{1}..y{m}}
+\end{equation}
+
+% parameter clauses
+The following equation is the equivalent of \ref{fullenc_pc1} written in the way that meet the requirement of CNF.
+\begin{equation}\label{fullenc_IP}
+    \neg\lambda_{x_{i}} \vee \neg\lambda_{y_{1}} \vee... \vee \neg\lambda_{y_{m}} \vee \theta_{x_{i}|y_{1}..y_{m}}
+\end{equation}
+\begin{equation}\label{fullenc_PI}
+    \neg\theta_{x_{i}|y_{1}..y_{m}} \vee \lambda_{x_{i}},\\ \;\;
+    \neg\theta_{x_{i}|y_{1}..y_{m}} \vee \lambda_{y_{j}} \;\; \mbox{ j = 1, ..., m}
+\end{equation}
+
+
+\subsubsection{Assigning Weights}
+% how weights are assigned
+
+%% Here should be the example with BN asia
+The following is an example with BN asia from \textcolor{red}{website}\\
+Node asia = \{$Visit\_asia_{yes}$, $Visit\_asia_{no}$\}\\
+\textbf{Indicator clauses:}\\
+$\lambda_{asia_{Y}} \vee \lambda_{asia_{N}}$\\
+$\neg \lambda_{asia_{Y}} \vee \neg\lambda_{asia_{N}}$\\
+\newline
+\textbf{Parameter clauses:}\\
+$\lambda_{asia_{Y}} \rightarrow \theta_{asia_{Y}}$\\
+$\theta_{asia_{Y}} \rightarrow \lambda_{asia_{Y}}$\\
+%%% fen ge xian %%%
+\newline
+Node $TB\|asia$:\\
+\textbf{Indicator clauses:}\\
+$\lambda_{TB_{Y}} \vee \lambda_{TB_{N}}$\\
+$\neg \lambda_{TB_{Y}} \vee \neg\lambda_{TB_{N}}$\\
+\newline
+\textbf{Parameter clauses:}\\
+$\lambda_{TB_{Y}} \wedge \lambda_{asia_{Y}}\rightarrow \theta_{TB_{Y}|asia_{Y}}$\\
+$\theta_{TB_{Y}|asia_{Y}} \rightarrow \lambda_{TB_{Y}}$\\
+$\theta_{TB_{Y}|asia_{Y}} \rightarrow \lambda_{asia_{Y}}$\\
+\newline
+$\lambda_{TB_{N}} \wedge \lambda_{asia_{Y}} \rightarrow \theta_{TB_{N}|asia_{Y}}$\\
+$\theta_{TB_{N}|asia_{Y}} \rightarrow \lambda_{TB_{N}}$\\
+$\theta_{TB_{N}|asia_{Y}} \rightarrow \lambda_{asia_{Y}}$\\
+\subsection{An improvement of Full Encoding}
+\subsubsection{A node with cardinality = 2}
+Now consider the node with cardinality 2. Take an Example in asia network, node \textit{smoker} has two possibilty \textit{Yes} and \textit{No}, so according to \ref{fullenc_ic1}, we have $\lambda_{smoker_{yes}} \vee \lambda_{smoker_{no}}$ and this will always be 1, and the same apply for \ref{fullenc_ic3}: $\neg\lambda_{smoker_{yes}} \vee \neg\lambda_{smoker_{no}}$\\
+\textit{\textbf{Simplification step 1:}} If the cardinality of a node in a Bayesian Network is 2, ommit the clause in \ref{fullenc_ic1} and \ref{fullenc_ic3} in \textit{3.1 Full Encoding}.
+
+\subsubsection{Parameter variable = 1 or parameter variable = 0}
+Now take a closer look at the values in each CPT. \\
+
+\textit{\textbf{Simplification step 2:}}When the parameter variable $\theta_{x_{i}|y_{1}..y_{m}}$ = 0, the parameter clause \textbf{P} described by \ref{fullenc_pc1} can be written as a single clause: $$\neg\lambda_{x_{i}} \vee \neg\lambda_{y_{1}} \vee... \vee \neg\lambda_{y_{m}}.$$
+The prove is given in section \textcolor{red}{Give the proof or explanation}
+
+\textit{\textbf{Simplification step 3:}}When the parameter variable $\theta_{x_{i}|y_{1}..y_{m}}$ = 1, the parameter clause \textbf{P} described by \ref{fullenc_pc1} can be eliminated from the clauses.\\
+
+Simplification step 2 and 3 are also called Encoding Logical Constrains in \textcolor{red}{Insert reference here}. Here are the proof of the Logical constrains simplification.\\
+\textcolor{red}{Give and Example with asia network here}
+
+\subsection{Improved Encoding}
+Note: this encoding is done based on the Full encoding in section. Consider the example \textcolor{red}{Give an example here}
+The idea is use less clauses and variables to encode the CPT. 
+In the reference \textcolor{red}{Give the source here} SOMEONE proposed that within a CPT, if there are multiple \textbf{non-extreme} variables that has the same value, instead of generating new variables each time, we can use one single variables to represent the parameter values.\\
+DP\% is used to describe the
+percentage of remaining variables if we use the same variable to represent the same values within a CPT.\\
+\textbf{\textit{Improved Encoding Steps:}}\\
+\textbf{Obtaining indicator clauses \textsc{I}:}\\
+For each node \textit{X} in a Bayesian Network with probability \{$x_{1}$,... ,$x_{n}$\} $\in$ \textit{X}, the following clauses are generated:
+\begin{equation}\label{Improvedenc_ic}
+    \lambda_{x_{1}} \vee ... \vee \lambda_{x_{n}}
+\end{equation}
+This step is the same as the Full encoding.\\
+
+\textbf{Obtaining indicator clauses \textsc{P}:}\\
+For each node \textbf{\textit{X}} in a Bayesian Network and its corresponding CPT:
+\begin{itemize}
+    \item For \textbf{extreme parameter values} in the CPT, parameter variables are generated as the same way as Full encoding \ref{fullenc_pc1}
+    \item For each \textbf{non\-extreme value} \textit{v}, we generate one parameter variable $\theta_{v}$.\\
+\textbf{Problem Raised:} Following the full encoding scheme, assume the following part from Node C with parent nodes A and B in a Bayesian network:
+%\begin{center}
+\begin{multicols}{2}
+[
+The following parameter clauses are generated
+]
+
+\begin{center}
+\vspace{10mm}
+    \begin{tabular}{ c c c c } 
+    \hline
+    C & A & B & P\\
+    \hline
+    \hline
+    $C_1$ & $A_1$ & $B_1$ & 0.2\\
+    $C_2$ & $A_2$ & $B_2$ & 0.2\\
+    \hline
+    \end{tabular}\\ 
+\end{center} 
+\columnbreak
+    
+$\lambda_{a_{1}} \wedge \lambda_{b_{1}} \wedge \lambda_{c_{1}} \rightarrow \theta_{0.2}$\\
+$ \theta_{0.2} \rightarrow \lambda_{a_{1}} \wedge \lambda_{b_{1}} \wedge \lambda_{c_{1}}$\\
+$\lambda_{a_{2}} \wedge \lambda_{b_{2}} \wedge \lambda_{c_{2}} \rightarrow \theta_{0.2}$\\
+$ \theta_{0.2} \rightarrow \lambda_{a_{2}} \wedge \lambda_{b_{2}} \wedge \lambda_{c_{2}}$\\
+\end{multicols}
+
+%\end{center}
+For the value 0.2 in this table, $\theta_{0.2}$ is used for the parameter variable, we got $ \theta_{0.2} \rightarrow \lambda_{a_{1}} \wedge \lambda_{b_{1}} \wedge \lambda_{c_{1}}$ and $ \theta_{0.2} \rightarrow \lambda_{a_{2}} \wedge \lambda_{b_{2}} \wedge \lambda_{c_{2}}$ in the clauses that are inconsistent with other clauses \textcolor{red}{REFERENCE}. According to the discussion in \textcolor{red}{Insert the discussion HERE}.\\
+\textbf{Solution:} The solution given in \textcolor{red}{Improved paper Reference} is to replace the Full encoding \ref{fullenc_pc1} with the following clause:
+\begin{equation}\label{improvedenc_pc}
+    \lambda_{x_{i}} \wedge \lambda_{y_{1}} \wedge... \wedge \lambda_{y_{m}} \rightarrow \theta_{x_{i}|y_{1}..y{m}}
+\end{equation}
+This introduced new models compared to the Full Encoding method, while according to \textcolor{red}{REFERENCE\_Encoding2}, the newly introduced model has larger cardinality and this can be solved by adding a condition when the output is fed into the model counter described the \textcolor{red}{section xxx}
+\end{itemize}
+
+Consider the node $\theta_{Dysp_{yes}|Bronc_{yes},either_{yes}} = 0.9$ and $\theta_{Dysp_{no}|Bronc_{no},either_{no}} = 0.9$, 
+If we follow the encoding method described in Full encoding, the following clauses are generated.
+
+\subsubsection{A comparison of Full encoding and Improved encoding}
+AHAHAHAHAHAH HOW TO COMPARE IT!!!!!
+
+
+
+\subsection{Group Encoding}
+\subsubsection{Inspiration of the simplification}
+The Improved Encoding discussed in Section 3.3 gives an improvement of encoding Bayesian Networks by encoding equal parameter values. In \textcolor{red}{REFERENCE, XXX} proposed a method which use less variables and clauses within each group of cnfs generated by the same variables. %这句不通！！！！！
+For each CPT, the rows which has the non-extreme values are partitioned into several groups based on the value. Within each group, we apply a simplification to try to reduce the number of variables and clauses inspired by the resolution strategy in boolean logic.\\
+\textcolor{red}{Give the boolean logic resolution HERE}
+
+With in a CPT, we do the following process before generating parameter clauses:\\
+partition the CPT into groups based on non-extreme values and the rows with extreme values remains the same.\\
+For each group of rows \textbf{R}, apply the Extended QM algorithm to simplify the clauses and variables with the clauses.\\
+Here's an example:
+\begin{tabular}{c c c c}
+    \hline
+    Dyspnea & Bronchitis & Either & Pr\\
+    \hline
+    \hline
+    1 & 1 & 1 & 0.9 \\
+    1 & 0 & 1 & 0.9 \\
+    0 & 0 & 0 & 0.9 \\
+    0 & 0 & 1 & 0.1 \\
+    0 & 1 & 1 & 0.1 \\
+    1 & 0 & 0 & 0.1 \\
+    1 & 1 & 0 & 0.8 \\
+    0 & 1 & 0 & 0.2 \\
+    \hline
+\end{tabular}
+
+
+\subsubsection{The idea of simplification by pre-processing the CNF}
+
+\subsection{The idea of QM Algorithm}
+\textcolor{red}{SOMEONE} Proposed the method to simplify boolean logic variable. the each rows is the Sum-of-product form.
+% describe how QM algorithm works
+\subsection{An extension of QM Algorithm For multi-level logic simplification}
+
+
+
+\section{Libraries and extensions}
+\subsection{Use of \textbf{pgmpy}}
+\subsubsection{Representing Bayesian Networks in pgmpy}
+\subsubsection{An extension from pgmpy library}
+
+
+
+\section{Evaluation}
+% compare the variables and clauses generated by Improved Full encoding, Improved Encoding and Group Encoding
+\subsection{number of variables and clauses}
+\subsection{size of encd}

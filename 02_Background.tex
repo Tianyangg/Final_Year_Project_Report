@@ -1,0 +1,41 @@
+\section{Required Background Knowledge}
+    \subsection{Joint probability distribution}
+    Given random variables \textbf{\textit{X,Y,...}} on a probability space $(\Omega, \mathcal{F}, \mathcal{P})$, joint probability distribution for \textbf{\textit{X,Y}} is the probability distribution that gives the ...
+    Let $$P(x_{1}, ..., x_{n}) = P(X=x_{1}, ... , X = x_{n})$$ denotes the probability of variables $X_{1}$ in sate $x_{1}$ etc. \par
+    A Bayesian n
+    We use the notation: $$P(x_{i}, x_{j}) = P(X_{i} = x, Y)$$ to denote the probability
+    \subsection{Bayesian Network}
+    Bayesian networks are probabilistic models P described by directed acylic graphs (DAG). For each node \textit{X} with random variables $\{x_{1}, ... x_{m}\}$ and its a parents \textit{Y}, there's a conditional probability distribution $P(x_{i}|Y)$. \par
+    The joint probability distribution of the Bayesian network: $$P(x_{1}, ... , x_{m}) = \Pi_{i = 1}^{m} P(x_{i}|Y)$$.
+    It can be written as $$P(x_{1},.., x_{m}) = \Pi_{i = 1}^{m}P(x_{i}|x_{i - 1}, .. x_{1})$$
+    So Bayesian networks assume that given values of parents of a network variable $X$, $X$ is independent of all its other predecessor variables in the graph and it can be written as: $$P(x_{i}|x_{i- 1}, ..., x_{1}) = P(x_{i}|Y)$$
+    
+    The Conditional distributions $P(X|Y)$ are obtained as follow:
+    $$P(X|Y) = \frac{P(X,Y)}{P(X)}$$
+    An example of a Bayesian Network and the process of computing Conditional distributions are given below in figure \textcolor{red}{GIVE AN EXAMPLE}
+    \subsection{Exact Bayesian Inference}
+    Given an Bayesian Network BN over Variables ${X, Y...}$. and probability distributions Pr. There are three reasonable questions to ask regarding the probability distributions:
+    \begin{itemize}
+        \item What's the most likely instantiation of network variables X given some evidence \textbf{e}
+        $$MPE(e) = argmax_{x} Pr(x, e)$$
+        \item What's the probability of an evidence \textbf{e}.
+        \item What's the assignment y over the complete variables that maximize P(y|x) given an evidence \textbf{x}
+    \end{itemize}
+    
+    \subsection{Multi\-linear functions}
+    
+    \subsection{Logical Variables}
+    \subsection{Conjunctive Normal Forms}
+    In boolean logic, a clause that contains only $\vee$ is called \textbf{disjunctive clause}, and a clause contains only $\wedge$ is called \textbf{Conjunctive clause}.\\
+    Conjunctive Normal Forms (also written as clausual normal form) is  the conjunction (\textit{AND}) of one or several clauses, and is a disjunction (\textit{OR}) of literals. An example is given below: $$(p \vee q \vee \neg r) \wedge (\neg q \vee s)$$
+    \subsection{Negation Normal Forms}
+    A formula is in \textbf{negation normal form} if the negation operator is only applied to variables and the only other allowed operators are conjunction (AND) and disjunction (OR).
+    \subsection{Propositional Model Counting}
+    Propositional Model counting is the problem of counting the number of models for a certain propositional formula.\cite{handbook-of-satisfiablity-model-counting}
+    
+    \subsection{Decomposability, and determinism}
+    \begin{itemize}
+        \item \textit{\textbf{Decomposibility}}: for
+        \item determinism
+    \end{itemize}
+    

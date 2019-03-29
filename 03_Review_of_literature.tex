@@ -1,0 +1,32 @@
+\section{the review of literature}
+    \subsection{Bayesian inference methods}
+        \subsubsection{Variable Elimination}
+        \subsubsection{Junction tree}
+        \subsubsection{Weighted model Couting}
+    \subsection{Encoding Bayed to CNF}
+        \subsubsection{Full encoding}
+            \subsubsubsection{Generating CNFs}
+            Given a Bayesian Network, two types of variables are generated.\\
+            Define the variables generated from Node \textbf{\textit{X}} as Indicator Variables.
+            For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\lambda_x$ define the indicator variable. \\
+            Define the variables generated form Node \textbf{\textit{X}} and its parents \textbf{Y} = {$Y_{1}$, ... $Y_{n}$} as Parameter Variables.
+            For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\theta_{X|Y}$ denotes the parameter variable.\\
+            \textbf{Obtaining indicator clauses \textsc{I}:}\\
+            For each node \textit{X} in a Bayesian Network with probability \{$x_{1}$,... ,$x_{n}$\} $\in$ \textit{X}, the following clauses are generated:
+            % Indicator Clauses and Parameter Clauses
+            \begin{equation}\label{fullenc_ic1}
+                \lambda_{x_{1}} \vee ... \vee \lambda_{x_{n}}
+            \end{equation}
+            
+            \begin{equation}\label{eq:fullenc_ic2}
+                \neg\lambda_{x_{i}} \vee \neg\lambda_{x_{j}}, \;\;\; \mbox{for each i $\neq$ j}
+            \end{equation}
+            According to the commutation of logic OR, $R \vee Q$ $\Longleftrightarrow$ $Q \vee R$, to avoid redundant clauses, \ref{eq:fullenc_ic2} can be simplified as :
+            \begin{equation}\label{fullenc_ic3}
+                \neg\lambda_{x_{i}} \vee \neg\lambda_{x_{j}}, \;\;\; \mbox{for each i $<$ j}
+            \end{equation}
+
+        \subsubsection{Simplified full encoding}
+        \subsubsection{Improved Encoding}
+        \subsubsection{Group Encoding}
+    \subsection{Model Counters}

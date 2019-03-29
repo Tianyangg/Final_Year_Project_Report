@@ -1,0 +1,27 @@
+
+\section{Introduction}
+    \subsection{Motivation}
+    Bayesian networks are widely used to model uncertainty by assigning probabilities to every possible states. It allows modeling large scale variables and represent models with a network.
+    Bayesian inference is based on solid rules of probability calculus such that all the assumptions are contained in the model.
+    Probablistic inference is that, given observations of some model variables, compute the posterior probabilities. it is widely used in game theory, statbility testing and medical diagnosis. 
+    % why exact inference
+    Bayesian inference consists of exact inference and approximate inference, for exact inference....\par
+    There are some existing methods for performing exact Bayesian inference, including...
+    Some common methods for exact inference are Variable elimination and junction tree algorithms, while for some large scale bayesian networks, bayesian networks are time consuming. In \cite{enc1}, Mark charvia et al, presented a method which perform Bayesian inference with Weighted Model Counting by encoding Bayesian networks into logic forms. This encoding method can also be used to encode other probabilitic graphical models such as Markov chains, and performing weighted model counting has been experimented to outperform junction tree algorithm for the Bayesisn networks that has large determinism.\par
+    
+    \subsection{Project Aims}
+    The goals of this project are listed below:
+    \begin{itemize}
+        \item Understand both Bayesian Networks and Weighted Model Counting.
+        \item Explore and compare the existing encoding algorithms that encode Bayesian Networks to Conjunctive Normal Forms.
+        \item Explore different Model Counting tools.
+        \item Implemented three encoding schemes in \cite{enc1,enc2,2006-enc3}.
+        \item Experiment the encoding schemes by encoding both benchmarks and real examples.
+        \item Evaluate the performance of the encoding schemes by feeding the encoding output to the model counter.
+    \end{itemize}
+
+    \subsection{The structure of the report}
+    The structure of the report follows:
+
+
+\newpage
