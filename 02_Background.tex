@@ -23,7 +23,9 @@
     \end{itemize}
     
     \subsection{Multi\-linear functions}
-    
+    A \textit{multi\-linear function} over variables $\Sigma$ is a function
+    with the form $t_{1} + t_{2} + ... + t_{n}$ in which each term $t_{i}$ is a product of some distinct variables. \\
+    $\Sigma = \lambda_{x}, \lambda_{y}, \lambda_{z}, \theta_{1}, \theta_{2}, \theta_{3}$, an example of muti\-linear function: $f = \lambda_{x}\theta_{1} + \lambda_{y}\theta_{2} + \lambda_{z}\theta_{3}\theta_{2}$
     \subsection{Logical Variables}
     \subsection{Conjunctive Normal Forms}
     In boolean logic, a clause that contains only $\vee$ is called \textbf{disjunctive clause}, and a clause contains only $\wedge$ is called \textbf{Conjunctive clause}.\\
@@ -35,7 +37,7 @@
     
     \subsection{Decomposability, and determinism}
     \begin{itemize}
-        \item \textit{\textbf{Decomposibility}}: for
-        \item determinism
+        \item \textbf{Decomposibility}: for any two chidren $node_{i}$ and $node_{j}$, and any node \textit{n} $Variables(node_{i}) \cap Variabes(node_{j}) = \emptyset$
+        \item \textbf{determinism}: for any two children \textcolor{red}{$n_{i} \wedge n_{j}$ is logically inconsistent for any node connected by \textbf{\textit{or}}}
     \end{itemize}
     
