@@ -1,0 +1,20 @@
+    def parameter_cl(bn, var_dic, clauses, weights):
+        for i in bn.nodes:
+            cardinality = i.get_cardinality()
+            evidence = i.get_evidence()
+            if no evidence:
+                for j in cardinality:
+                    name <- theta_ij
+                    var_dic[name] <- max(var_dic.value()) + 1
+                    weight[name] <- fetch weight
+            else:
+                ev_cardinality <- [ev.cardinality() for ev in i.evidence]
+                evidence_lst <- generate evidence list()
+                for j in cardinality:
+                    for ev in evidence_lst:
+                        name = 'theta_' + i + str(j) + '|' + ev
+                        var_dic[name] <- max(var_dic.value()) + 1
+                        weight[name] <- fetch weight
+    return var_dic, clauses, weights
+
+
