@@ -1,8 +1,31 @@
+\newpage
 \section{the review of literature}
     \subsection{Bayesian inference methods}
         \subsubsection{Variable Elimination}
+        Variable Elimination is a Exact inference method. The idea is to exploit the structure by eliminating the non-observed and non-queired variables once at a time.\\
+        A Factor is a function from a tuple of ramdom variables to a number, denoted by $f(X_{1}, X_{2}, ... , X_{j})$, it denotes a distribution over $\{X_{1}, .., X_{j}\}$. 
+        \begin{itemize}
+            \item  By assigning some of (or all of) the variables in a factor, new factors can be made out of an existing factor. For example: $f(X_{1} = v_{1}, X_{2}, ..., X_{j})$ is a factor of $\{X_{2}, ... , X_{j}\}$ when $v_{1}$ is assigned to $X_{1}$.
+            \item A variable can be signed out. Consider the $X_{1}$ over domain $\{v_{1}, .. ,v_{m}\}$, the varaible $X_{1}$ can be sumed out with the formula below: $$\Sigma_{i= 1}^{m}f(X1 = v_{i}, X_{2}, ..., X_{j})$$
+            \item Factors can be multiplied. Consider two factors $f_{1}(X_{1}, X_{2}, X_{3})$ and $f_{2}(X_{1}, X_{4}, X_{5})$ which they both have $X_{2}$ in common. A new factor is defined below: $$(f_{1} \times f_{2})(X_{1}, .. X_{5}) = f_{1}(X_{1}, X_{2}, X_{3}) \times f_{2}(X_{1}, X_{4}, X_{5}) $$
+        \end{itemize}
+        Given varibles over a Bayesian Network $X_{1}, ... , X_{m}$, the factor $P(Z, Y_{1}=v_{1}, ... , Y_{j}= v_{j})$ can be computed by summing out $Z_{1}, ..., Z_{k} =  \frac{\{X_{1}, ... X_{n}\}}{Z, Y_{1}, ..., Y_{j}}$.\\
+        
+        Given the factors $P(X_{i}|iX_{i})$ and chain rule, $P(X_{1}, ..., X_{n})$ can be written as: $\Pi_{i = 1}^{n} P(X_{i}|pX_{i})$. So we have:
+        $$P(Z, Y_{1}=v_{1}, ... , Y_{j}= v_{j}) = \Sigma_{Z_{k}}.. \Sigma_{Z_{1}} \Pi P(X_{i}|pX{i})_{Y_{1} = v1, .. Y_{j} = v_{j}}$$
+        %Given a function$$f(x) = \Pi_{i = 1}^{n} f_{i}(X_{i})$$ and query \textbf{Q}. e
         \subsubsection{Junction tree}
-        \subsubsection{Weighted model Couting}
+        Junction tree algorithm, or sometimes called Joint tree algorithm is another exact Bayesian inference algorithm. figure \ref{fig:bayesjunc} shows a Bayesian network and its corresponding junction tree with the assignment of the factors.
+        \begin{figure}
+            \centering
+            \includegraphics[width = 0.6\textwidth]{pic/bayesandjunctree.png}
+            \caption{Left A Bayesian network, Right: its corresponding junction tree}
+            \label{fig:bayesjunc}
+        \end{figure}
+        Junction tree algorithm can be viewed as a decent way of performing Variable elimination. Pick a leaf $l_{1}$ which has only one single neighbour $l_{2}$ in the junction tree, then eliminate the unique variable which only appears in $l_{1}$
+        %%% 还没写完
+        \subsubsection{Weighted model Counting}
+    
     \subsection{Encoding Bayed to CNF}
         \subsubsection{Full encoding}
             \textbf{Generating CNFs}
@@ -257,6 +280,7 @@
     \subsection{Exact Model Counters}
     There are mainly two types of weighted model counting methods, Search-based methods and Compilation-based methods. This section mainly compares three typical model counting methods called Cachet \footnote{cachet link: http://www.cs.rochester.edu/u/kautz/Cachet/index.htm}, C2D \footnote{C2D link: http://reasoning.cs.ucla.edu/c2d/}, and Ace \footnote{Ace link: http://reasoning.cs.ucla.edu/ace/moreInformation.html}.
     \subsubsection{Search based model counter}
+    \textbf{Cachet:}\\
     In \cite{Bayardo:2000:CMU:647288.721114}, the author showed that a Conjunctive Normal Form can be decomposed into components such that no two components share same variables
     so that the models can be counted by counting each component independently.
     Search based model counter count models by forcing decomposition. The process is described below:
@@ -265,12 +289,30 @@
         \item Perform Unit resolution
         \item Do 1 and 2 for the sub component generated so far recursively 
     \end{enumerate}
-
+    An example is given in \cite{2008-literature-review}. Consider the set of clauses:\\
+    $A \vee B \vee C$\\
+    $A \vee D \vee E$\\
+    $\neg A \vee \neg B \vee C$\\
+    $\neg A \vee \neg D \vee E$\\
+    \textcolor{red}{Insert the steps here}\\
+    Compared to the Compile\-based model counters, model counters by searching require less computational space. One of the most widely search\-based model counter is called cachet proposed in \cite{Cachet}, combined with the encoding method we discussed in \textcolor{red}{Need to add that part}, it showed strong ability to perform probabilistic inference and the result was demonstrated in \cite{Sang:2005:PBI:1619332.1619409}\\
+    \textbf{SharpSAT:}\\
+    Similar to Cachet, the SharpSAT first proposed in \cite{Sharp-SAT2006} used the DPLL algorithm \\
+    Some of the algorithms such as \textcolor{red}{DPLL with caching: aNEW ....} improved the performance using techniqes such as Component Caching
     \subsubsection{Compile based model counter}
-    \subsubsection{Cachet and C2D model counter}
-    Cachet is a search based model counter \cite{Cachet}. The idea behind is to decompose the CNF clauses into several components that does not share variables, so that each component can be counted separately. When all the clauses share some same variables, splitting is required to force the decomposition. \\\par
-    Compared to some of the model counter that explore  topological structure, Cachet performed better in the experiment in \cite{2008}.\\\par
-    C2D \cite{c2d} is a knowledge compiler that is based on a search based model counter, while it keep trace of its operations, and it also use a different method to implement decomposition, variable splitting and caching.
-    \subsubsection{Ace model counter}
-    Ace \cite{Ace} is a knowledge compilation based model counter that compile one logical form into another target logical form. For example, in section 2.1.1, after encoding the Bayesian Networks into CNF using Encoding 1, The CNF need to be compiled into d-DNNF. The d-DNNF supports model counting in polytime in the size of the compiled form.
+    Another categrory of model counter use knowledge compilation, which the process aims to compile one type logic form into another one.\cite{2008-literature-review} In \cite{2002language-map}, a \textit{represented language} (such as CNF) is defined as sth we expect human to read and write without too much effort, and the \textit{target compilation langauge} are in the form such that it can repond queried in poly\-time. Some of the widely used compile\-based model counters are C2D and miniC2D.\\
+    
+    \textbf{C2D}:\\
+    C2d was deveploped by \textcolor{red}{UCLA Reasoning group}. In \textcolor{red}{refernece15, 20}, the CNF of a Bayesian network, encoded using Full Encoding discussed above, was compiled in to d\-DNNF, and this is a form of knowledge representation knowledge that support model counitng in poly\-time to the size of the input compiled form (d\-DNNF) \cite{2002language-map}.\\
+    Model counting require three property, decomposition, determinism, and smoothness which is satisfied by d\-DNNF. Compiling CNF into d\-DNNF will support weighted model counting by traversing the d\-DNNF and multiply or add the results.\\
+    
+    \textbf{mini-C2D}:\\
+    The model counter mini\-C2D was proposed in \cite{minic2d}. Minic2d is a top\-down compiler that given the CNF clauses as input, it compile the CNF into Sentential Decision Diagram (SDD), the detailed definition of SDD is described in \textcolor{red}{insert SDD}. \\
+    One of the main disadvantages is that the compiled file size can be larger than the available memory, futher results are shown in the Results and analysis in \textcolor{red}{insert here the seciton}.
+    % \subsubsection{Cachet and C2D model counter}
+    % Cachet is a search based model counter \cite{Cachet}. The idea behind is to decompose the CNF clauses into several components that does not share variables, so that each component can be counted separately. When all the clauses share some same variables, splitting is required to force the decomposition. \\\par
+    % Compared to some of the model counter that explore  topological structure, Cachet performed better in the experiment in \cite{2008}.\\\par
+    % C2D \cite{c2d} is a knowledge compiler that is based on a search based model counter, while it keep trace of its operations, and it also use a different method to implement decomposition, variable splitting and caching.
+    % \subsubsection{Ace model counter}
+    % Ace \cite{Ace} is a knowledge compilation based model counter that compile one logical form into another target logical form. For example, in section 2.1.1, after encoding the Bayesian Networks into CNF using Encoding 1, The CNF need to be compiled into d-DNNF. The d-DNNF supports model counting in polytime in the size of the compiled form.
     
