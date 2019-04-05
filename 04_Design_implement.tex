@@ -7,8 +7,8 @@
     A network block defines the name of the network and lists the properties. The example below specify the network block for the Asia Bayesian Network:
     \begin{lstlisting}
     network asia{
-       property version 1.1;
-       property author ..;
+      property version 1.1;
+      property author ..;
     }
     \end{lstlisting}
     
@@ -101,7 +101,7 @@
             [1 0]
             [1 1]]
     \end{lstlisting}
-    \textcolor{red}{Maybe I should save some space}.\\
+   
     Then the evidences are formatted into tuples with the same length and each column correspond to one entrance to the probability table.\\
     \begin{lstlisting}
     A sample return the evidence entrance. 'dysp' node in aisa.bif
@@ -155,6 +155,7 @@
         \caption{A sample printed CPT of a node dyps}
         \label{fig:sample print table}
     \end{figure}
+    
     \subsection{Implementation of Full encoding}
     In section 3.1 Full encoding, for each node in the Bayesian network, two kinds of variables need to be generated, indicator variables and parameter variables respectively. This section will first show the steps to generate indicator variables and indicator clauses and then show the steps to encode parameter variables and clauses.
     \begin{itemize}
@@ -237,15 +238,16 @@
                     clauses.append([(-1, var_dic[name]), (1, dic['lambda_i'])])
                     ...
                     clauses.append([(-1, var_dic[name]), (1, dic['lambda_evs])])
-    return var_dic, clauses, weights
+        return var_dic, clauses, weights
+    \end{minted}
     % \caption{Psuedocode for encoding parameter clauses}
     % \label{code:Full enc parameter clauses}
-    \end{minted}
 
     \subsection{Simplified Full encoding}
     In simplified Full encoding, one of the main improvement is to capture the extreme values when generating the parameter clauses. Before generating variables and clauses, the weight is fetched from the Probabilty table.\\
     \newline
-    If Pr($variable_{i}|evidence_{1}...evidence-{m}$) = 0, the parameter clauses won't be generated, and only one clause will be appended to the CNF: [$\neg \lambda_{variable_{i}|}, \neg \lambda_{evidence_{1}}, ..., \neg \lambda_{evidence_{m}}$].\par
+    If Pr($variable_{i}|evidence_{1}...evidence-{m}$) = 0, the parameter clauses won't be generated, and only one clause will be appended to the CNF: [$\neg \lambda_{variable_{i}|}, \neg \lambda_{evidence_{1}}, ..., \neg \lambda_{evidence_{m}}$].\\
+    
     If Pr($variable_{i}|evidence_{1}...evidence-{m}$) = 1, no action is done and the program should move to the next entry of the probability table.\\
     
     The psuedocode for simplifying extreme values with evidence list not empty is given below, the case without evidence can be implemented similarly.
@@ -269,17 +271,107 @@
                     do the same as Full encode parameter clauses
         
     \end{minted}
-    According to \textcolor{red}{PAPER NAME}, the simplification step lead to significant improvement in the number of clauses which directly influence the time and space usage in the model counting phase. Detailed result is discussed later in the Result section \textcolor{red}{result section number}
+    According to \cite{enc1}, the simplification step lead to significant improvement in the number of clauses which directly influence the time and space usage in the model counting phase. Detailed result is discussed later in the Result section \textcolor{red}{result section number}
     
     \subsection{Implementation of Improved Encoding}
-    The idea of Improved encoding is to use same logic variable to encode the parameter variables that have the same value in the CPT. For each node in the Bayesian network, the table is first partitioned in to several sub-tables based on the probability values. This can be done with the sorting within the table fetched by myCPD(TabularCPD) method.
-    \subsubsection{Splitting the CPT}
+    The idea of Improved encoding is to use same logic variable to encode the parameter variables that have the same value in the CPT. For each node in the Bayesian network, the table is first partitioned in to several sub-tables based on the non-extreme probability values. This can be done with the sorting within the table fetched by myCPD(TabularCPD) method. After the partition of the table, an encoding scheme for paramter values and clauses is described.
     
     \subsubsection{Encoding each parameter value}
-    
+    If the value is unique or extreme (0 or 1), it's considered a subgroup itself. For each subgroup, let \textit{p} denotes each row in the subgroup, the following algorithm describes the encoding step for each subgroup.
+    \begin{algorithm}
+    \caption{Improved Encoding for each subgroup}\label{algorithm:encode group}
+    \begin{algorithmic}[1]
+    \Procedure{$Subgroup\_encode$}{$sub\_group$, $clauses$}
+    \For{$each sub-group \tau $}
+    \State $P \gets$ each row \textit{p} in subgroup \Comment{Assume $x_{1}, ev_{1}, ..., ev_{m}$ in p}
+        \State \textbf{I} $\gets$ lambda\_xi, lambda\_ev1, .. lambda\_evm
+            \Comment{I $\gets$ encodes p}
+        \For{each p}
+            \If {$\theta = 0$}
+                \State continue
+            \EndIf
+            \If {$\theta = 1$}
+                \State $clause \gets \neg I$
+                \State clauses.append(clause)
+            \Else
+                \State $clause \gets \neg I \vee \theta_{index}$
+                \State clauses.append(clause)
+            \EndIf
+        \EndFor
+    \EndFor
+    \State \textbf{return} $clauses$
+    \EndProcedure
+    \end{algorithmic}
+    \end{algorithm}
     \subsection{Implementation of Group Encoding}
-        
-    \subsubsection{QM algorithm and extension for multi-variate simplification}
+    \subsubsection{QM algorithm}
+    QM algorithm, proposed by Quine and McClusckey, is an algorithmic way of simplifying boolean logic functions. The library for QM algorithm applied for binary variables was used and extended to support the simplification for multi-variables.
     
-    \subsection{Write files}
+    \subsubsection{An extension of QM algorithm for multi-variate simplification}
+    To simplify multi\-variate Bayesian network variables, the QM algorithm was extended.\\
+    
+    For the variables in the CPT, a fixed length of bit string is used to represent the combination of variable. The length of bit string depends on the cardinality of each variable. 
+    $$total\_length = \Sigma_{i = 1}^{m} \lceil log_{2}(Cardinality(Var_{i}))\rceil$$
+    The bit string is then transformed from binary to decimal numbers as the input of QM algorithm. Then the output is splitted into small binary groups same as the length used to encode each varible. 'X' means the don't care case. If given values of for the other variables, the variable contains the don't care case will have a uniform probability or irrelevant, variable can be removed from the clause . An example is given below:\\
+    
+    \begin{table}[]
+        \centering
+        \begin{tabular}{c c c c |c c}
+            \hline
+            Dysp & Bronc & Either & Pr & bitstring & decimal \\
+            \hline
+            \hline
+             1 & 1 & 1 & 0.9 & 111 & 7 \\
+             1 & 0 & 1 & 0.9 & 101 & 5 \\
+             0 & 0 & 0 & 0.9 & 000 & 0 \\
+            \hline
+            card = 2 & card = 2 & card = 2 & -- & -- & -- \\
+            \hline
+        \end{tabular}
+        \caption{An example of encoding using dysp node in asia.bif}
+        \label{tab:my_label}
+    \end{table}
+    
+    This extension of the QM algorithm won't simplify the clauses into the most essential prime implicants for variables with cardinality $\>$ 2, while it the simplification of the encoding result already lead to significant improvement into number of clauses.\\
+    
+    Smaller clauses may be generated if we apply the algorithm multiple times while the runtime of QM algorithm is exponential to the size of variables. Therefore, the algorithm is only applied once for each subgroup of the CPD.\\
+    
+    \begin{lstlisting}
+    An example process using the table mentioned above
+    >> bitstring(table)
+    >> qm.qm(ones = [0, 5, 7])
+        >> ['000', '1X1']
+    >> split_result(['000', '1X1'])
+        >> [['0', '0', '0'], ['1', 'X', '1']]
+    >> decode_qm_output -> [[Dyspnea_0, Bron_0, Either_0],
+                            [Dyspnea_1, Either_1)]]
+    \end{lstlisting}
+    
+    The output of the extendedQM(subgroup) is the simplified implicants of the subgroup. For each output, the following encoding steps are used to generated clauses:
+    
+    \begin{algorithm}
+    \caption{Group Encoding for each subgroup}\label{algorithm:group encoding}
+    \begin{algorithmic}[1]
+    \Procedure{$Subgroup\_encode$}{$sub\_group$, $clauses$}
+    \For{each sub-group $\tau$}
+        \State P $gets$ output simplified groups from the extendedQM
+        \State  I $gets$ lambda\_x1 , ... ,lambda\_evidence
+        \For{each p}
+            \If {$\theta = 0$}
+                \State continue
+            \EndIf
+            \If {$\theta = 1$}
+                \State $clause \gets \neg I$
+                \State clauses.append(clause)
+            \Else
+                \State $clause \gets \neg I \vee \theta_{index}$
+                \State clauses.append(clause)
+            \EndIf
+        \EndFor
+    \EndFor
+    \State \textbf{return} $clauses$
+    \EndProcedure
+    \end{algorithmic}
+    \end{algorithm}
+
   
