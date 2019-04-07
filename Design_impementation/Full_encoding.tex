@@ -1,0 +1,86 @@
+\subsection{Implementation of Full encoding}
+    In section 3.1 Full encoding, for each node in the Bayesian network, two kinds of variables need to be generated, indicator variables and parameter variables respectively. This section will first show the steps to generate indicator variables and indicator clauses and then show the steps to encode parameter variables and clauses.
+    \begin{itemize}
+        \item \textit{var\_dic} is a dictionary in which the key is the name of the variable and the value is used when the cnf is written into the DIMACS format. 
+        \item \textit{clauses} is a nested list, each element correspond to one clauses in the generated CNF. Literals are stores as a tuple (sign, variable). sign = -1 means the negation of the variable
+        \item \textit{weights} is a dictionary that stores the corresponding weights of the variable following the weights assigning rules mentioned in \textcolor{red}{WHICH SECTION}. The key is the name of the variable such as $\lambda_{dysp_{0}}$ and the value is the corresponding weight.
+    \end{itemize}
+    \textbf{Generating Indicator variables:}\\
+    Given a bayesian network \textit{bn}, for each node in the network, define the number of indicators same as its cardinality. Then two types of clauses are generated: $[\lambda_{x_{1}}, ... \lambda_{x_{n}}]$ and $[\neg \lambda_{x_{i}}, \neg \lambda_{x_{j}}]$ when $i < j$. weights($\lambda_{x}$) = 1, weights($\neg \lambda_{x}$) = -1. Traverse the node in the given Bayesian network and all indicator clauses are generated.
+    The Psuedocode for generating indicator variables and clauses is given below:
+    \begin{minted}
+    [linenos]
+    {python}
+    def indicator(bn, var_dic, clauses, weights):
+        for i in bn.nodes:
+            cardinality <- bn.get_cardinality(i)
+            # get variables
+            for j in range(cardinality):
+                name <- 'lambda_' + str(i)+ '_' + str(j)
+                # append variable to variable dictionary
+                # store the corresponding weights
+                if name not in var_dic:
+                    var_dic[name] = max(var_dic.values()) + 1
+                    weights[name] = 1
+            # get clauses:
+        for i in bn.nodes:
+            cardinality <- bn.get_cardinality(i)
+            cl = [] # cl store each clause in the CNF, represented by a list of tuples
+            for j in range(cardinality):
+                variable <- fetch the corresponding variable from the dictionary
+                cl.append((1, variable)) # 1 represent positive
+            clauses.append(cl)
+            
+            for m in range(cardinality):
+                for n in range(m + 1, cardinality):
+                    var1, var2 <- fetch lambda_i_n, fetch lambda_i_m
+                    cl = [(-1, var1), (-1, var, var2)]
+                    clauses.append(cl)
+                    weights[m] = -1
+    return clauses, var_dic, weights
+    \end{minted}
+    
+    \noindent \textbf{Generating Parameter variables:}\\
+    For each variable of a node in the bayesian network, first get the evidence of the variable and the the evidences' cardinality. These, together with the node's cardinality, specify the number of values in a conditional probability table. For each value, a parameter variable $\theta_{node_{i}|evidences}$ is generated.\\
+    $$number\_of\_values = cardinality(node) \times \Pi_{i = 1}^n cardinality(evidence_{i})$$
+    
+    The corresponding clauses: (described in line 20 \~ 26 in psuedocode)
+    \begin{itemize}
+        \item $ \neg\lambda_{x_{i}} \vee \neg\lambda_{y_{1}} \vee... \vee \neg\lambda_{y_{m}} \vee \theta_{x_{i}|y_{1}..y_{m}}$
+        \item  $\neg\theta_{x_{i}|y_{1}..y_{m}} \vee \lambda_{x_{i}}$
+        \item $\neg\theta_{x_{i}|y_{1}..y_{m}} \vee \lambda_{y_{j}} \;\; \mbox{ j = 1, ..., m}$
+    \end{itemize}
+    
+    \begin{minted}
+    [linenos]
+    {python}
+    def parameter_cl(bn, var_dic, clauses, weights):
+        for i in bn.nodes:
+            cardinality = i.get_cardinality()
+            evidence = i.get_evidence()
+            if no evidence:
+                for j in cardinality:
+                    name <- theta_ij
+                    var_dic[name] <- max(var_dic.value()) + 1
+                    weight[name] <- fetch weight
+                    clauses.append([(-1, var_dic['lambda_i']), (1, var_dic[name]])
+                    clauses.append([(-1, var_dic[name]), (1, dic['lambda_i'])])
+            else:
+                ev_cardinality <- [ev.cardinality() for ev in i.evidence]
+                evidence_lst <- generate evidence list()
+                for j in cardinality:
+                    for ev in evidence_lst:
+                        name = 'theta_' + i + str(j) + '|' + ev
+                        var_dic[name] <- max(var_dic.value()) + 1
+                        weight[name] <- fetch weight
+                        clauses.append([(-1, var_dic['lambda_i']),
+                                        ...
+                                        (-1, var_dic['lambda_evidences']),
+                                        (1, var_dic[name]])
+                    clauses.append([(-1, var_dic[name]), (1, dic['lambda_i'])])
+                    ...
+                    clauses.append([(-1, var_dic[name]), (1, dic['lambda_evs])])
+        return var_dic, clauses, weights
+    \end{minted}
+    % \caption{Psuedocode for encoding parameter clauses}
+    % \label{code:Full enc parameter clauses}

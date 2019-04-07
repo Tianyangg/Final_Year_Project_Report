@@ -1,0 +1,75 @@
+\subsection{Programming Language}
+I used \textbf{Python} for the implementation. Although python programs are generally expected to run slower than some other Object-oriented programming languages like JAVA and C++, it enables the programs to become three to five times shorter than JAVA and five to ten times shorter than C++.\footnote{https://www.python.org/doc/essays/comparisons/}, 
+and Python also supports powerful dictionary and list types. \\
+
+\noindent Another reason for using Python is that with certain libraries, Bayesian Networks can be imported or defined in a simple way, so that it supports testing the performance with widely used benchmarks.
+
+\subsection{Input format}
+The input is the \textbf{Bayesian Interchange Format} (BIF) which are files with .bif extension to represent Bayesian Networks. The BIF files are used as input because it's a widely used format in tools that are dealing with Bayesian Networks including BayesiaLab \footnote{http://www.bayesia.com/}, JavaBayes\footnote{https://www.cs.cmu.edu/~javabayes/Home/} etc, so there are a lot of available benchmarks with the BIF Format. In general, Four types of blocks are defined.\\
+
+\noindent \textbf{The Network Block:}\\
+\noindent A network block defines the name of the network and lists the properties. The example below specify the network block for the Asia Bayesian Network:
+\begin{lstlisting}
+network asia{
+  property version 1.1;
+  property author ..;
+}
+\end{lstlisting}
+
+\noindent \textbf{The Variable Block:}\\
+Variable blocks define the variables in a network. These blocks used
+to be called node blocks in the BIF; it seems that variable conveys
+more of a statistical meaning while node just refers to a graphical
+concept. The example below is the bronc node from asia.bif
+\begin{lstlisting}
+ variable bronc{
+    type discrete [2] {yes, no};
+ }
+\end{lstlisting}
+
+\noindent \textbf{Blocks for standard nodes}\\
+Standard nodes have to define the probabilities for each discrete parent instantiation. An example of a standard probability block is: 
+\begin{lstlisting}
+ probability (dysp | bronc, either){
+    (yes, yes) 0.9, 0.1;
+    (no, yes) 0.7, 0.3;
+    (yes, no) 0.8, 0.2;
+    (no, no) 0.1, 0.9;
+}
+\end{lstlisting}
+
+\noindent \textbf{Probability blocks}:\\
+Probability blocks are another way to specify the (conditional) probability tables (CPTs). For these variables, and hence the topology of the network. The block indicates the variables of the probability distribution right after the keyword probability.
+\begin{lstlisting}
+probability (v_10_8 v_10_7 v_9_8){ 
+table 0.586357 0.667473 0.789088 0.466932 
+      0.413643 0.332527 0.210912 0.533068;
+}
+\end{lstlisting}
+A more detailed explanation of the BIF is explained here: \footnote{http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm} \\
+
+\subsection{Output}
+The output of the program is the cnf file following the DIMACS format which is a widely accepted standard format for representing CNF clauses and it's also the input format used by most of the model counters mentioned in section 3.3.\\
+\begin{itemize}
+    \item A comment line starts with a \textit{c}
+    \item A line p cnf var clauses specify the instance in CNF format, in which \textit{vars} is the number of variables used in the file and \textit{clauses} is the number of clauses in the CNF.
+    \item Each CNF variable is denoted by a non\-zero number smaller than \textit{vars}, the negation of a variable is denoted by a negative number.
+    \item Each clauses contains one or several CNF variables, 0 specifies the end of the clause.
+\end{itemize}
+
+Consider the following CNF:
+\begin{center}
+    $x_{1} \vee x_{2} \vee \neg x_{3}$\\
+    $x_{1} \vee x_{4} \vee x_{5}$\\
+    $\neg x_{3} \vee \neg x_{4}$\\  
+\end{center}
+The clauses in DIMACS format:
+\begin{center}
+    \begin{lstlisting}
+    c A sample DIMAC file
+    p cnf 5 3
+    1 2 -3 0
+    1 4 5 0
+    -3 -4 0
+    \end{lstlisting}
+\end{center}

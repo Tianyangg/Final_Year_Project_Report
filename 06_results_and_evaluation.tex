@@ -204,7 +204,7 @@ Comparing column 4 and column 6, the results showed that although similar number
 mark	&	Time	&	Time	&	Time	&	Time	&	Time	&	Time	\\
 	\hline
 	\hline
-    42	-	2	&	-	&	-	&	63.1533	&	77.3533	&	10.0803	&	0.38467	\\
+    42	-	2	&	-	&	-	& 63.1533 &	77.3533	&	10.0803	&	0.38467	\\
     42	-	3	&	-	&	-	&	-	&	-	&	118.6946	&	18.7187	\\
     42	-	4	&	-	&	-	&	-	&	-	&	60.56634	&	10.57233	\\
     42	-	5	&	-	&	-	&	-	&	-	&	255.5615	&	49.5615	\\
@@ -215,9 +215,15 @@ mark	&	Time	&	Time	&	Time	&	Time	&	Time	&	Time	\\
 \end{table}
 
 \subsection{When Group encoding offers no advantages}
-So far, with regard the the number of clauses, compiling time and model counting time, Group encoding outperforms the other two encoding schemes we are comparing. However, the runtime of QM algorithm is exponentially to the size of input variables. When the Bayesian network nodes have large number of parents, the QM algorithm won't be able to simplify the CNF within the time limit, thus, the whole process fail during the encoding process.
+So far, with regard the the number of clauses, compiling time and model counting time, Group encoding outperforms the other two encoding schemes we are comparing with. However, the run-time of QM algorithm is exponentially to the size of input variables. When the Bayesian network nodes have large number of parents, the QM algorithm won't be able to simplify the CNF within the time limit, thus, the whole process fail during the encoding process.
+
+\subsection{Discussion of results}
+In general, the Simplified full encoding generate the largest CNFs and have the longest model counting times, while the NNF file size after compiling the input CNF file is smaller compared to the Improved Encoding.\\
+
+Improved encoding tends to generate smaller CNFs compared to Full encoding, and the totol time spend in the model counting phase inclduding compiling and counting tends to become shorter. While the file size might be larger and sometimes it will run out of memory. The size for a 16 $\times$ 16 Grid network with Ratio 50 determinism reached 2GB.\\
+
+Group encoding outpeform both Simplified Full encoding and Improved encoding for the benchmarks with deterministic and small CPTs, it tends to have smaller CNF size, the shortest model counting time and small NNF file sizes. However, when it comes to Bayesian networks wit large CPTs, the time spend on QM algorithm will grow exponetially, as a result, in those cases, the Group encoding won't perform well enough.
 
 \subsection{Drawbacks of Weighted Model Counting}
-The first evaluation was the comparison between different inference methods.
-The variable elimination
-\subsubsection{consuming time}
+The first evaluation was the comparison between different inferencing with Variable Elimination and 
+

@@ -1,32 +1,56 @@
 \newpage
-\section{The review of literature}
-\textcolor{red}{Why using python, why selecting Full encoding, Simplified .... to ...\\
-need to insert reference for Junction tree and Variable Elimination}\\
+\section{Literature Review}
 In this section, the related work are discussed in the following dimensions:
 \begin{enumerate}
     \item Exact Bayesian inference methods.
     \item Several encoding schemes that can reduce the computation of probability of the evidence for a Bayesian Network into a Weighted model counting problem. 
     \item Exisiting model counting tools.
 \end{enumerate}
-
     \subsection{Bayesian inference methods}
         \subsubsection{Variable Elimination}
         Variable Elimination is a Exact inference method. The idea is to exploit the structure by eliminating the non-observed and non-queried variables once at a time.\\
         
-        A Factor is a function from a tuple of random variables to a number, denoted by $f(X_{1}, X_{2}, ... , X_{j})$, it denotes a distribution over $\{X_{1}, .., X_{j}\}$. 
+       \noindent A Factor is a function from a tuple of random variables to a number, denoted by $f(X_{1}, X_{2}, ... , X_{j})$, it denotes a distribution over $\{X_{1}, .., X_{j}\}$. 
         \begin{itemize}
             \item  By assigning some of (or all of) the variables in a factor, new factors can be made out of an existing factor. For example: $f(X_{1} = v_{1}, X_{2}, ..., X_{j})$ is a factor of $\{X_{2}, ... , X_{j}\}$ when $v_{1}$ is assigned to $X_{1}$.
             \item A variable can be signed out. Consider the $X_{1}$ over domain $\{v_{1}, .. ,v_{m}\}$, the variable $X_{1}$ can be summed out with the formula below: $$\Sigma_{i= 1}^{m}f(X1 = v_{i}, X_{2}, ..., X_{j})$$
             \item Factors can be multiplied. Consider two factors $f_{1}(X_{1}, X_{2}, X_{3})$ and $f_{2}(X_{1}, X_{4}, X_{5})$ which they both have $X_{2}$ in common. A new factor is defined below: $$(f_{1} \times f_{2})(X_{1}, .. X_{5}) = f_{1}(X_{1}, X_{2}, X_{3}) \times f_{2}(X_{1}, X_{4}, X_{5}) $$
         \end{itemize}
         
-        Given variables over a Bayesian Network $X_{1}, ... , X_{m}$, the factor $P(Z, Y_{1}=v_{1}, ... , Y_{j}= v_{j})$ can be computed by summing out $Z_{1}, ..., Z_{k} =  \frac{\{X_{1}, ... X_{n}\}}{Z, Y_{1}, ..., Y_{j}}$.\\
+        \noindent Given variables over a Bayesian Network $X_{1}, ... , X_{m}$, the factor $P(Z, Y_{1}=v_{1}, ... , Y_{j}= v_{j})$ can be computed by summing out $Z_{1}, ..., Z_{k} =  \frac{\{X_{1}, ... X_{n}\}}{Z, Y_{1}, ..., Y_{j}}$.\\
         
-        Given the factors $P(X_{i}|iX_{i})$ and chain rule, $P(X_{1}, ..., X_{n})$ can be written as: $\Pi_{i = 1}^{n} P(X_{i}|pX_{i})$. So we have:
+        \noindent Given the factors $P(X_{i}|iX_{i})$ and chain rule, $P(X_{1}, ..., X_{n})$ can be written as: $\Pi_{i = 1}^{n} P(X_{i}|pX_{i})$. So we have:
         $$P(Z, Y_{1}=v_{1}, ... , Y_{j}= v_{j}) = \Sigma_{Z_{k}}.. \Sigma_{Z_{1}} \Pi P(X_{i}|pX{i})_{Y_{1} = v1, .. Y_{j} = v_{j}}$$
-        %Given a function$$f(x) = \Pi_{i = 1}^{n} f_{i}(X_{i})$$ and query \textbf{Q}. e
+        
+       
+        \noindent To sum up, the Variable elimination algorithm is to repeat
+        \begin{enumerate}
+            \item choose a variable to eliminate.
+            \item push in its sum as far as possible.
+            \item Compute the sum to result in a new factor.
+        \end{enumerate}
+        \newpage
+        \noindent \textbf{Complexity of Variable Elimination}\\
+        
+        \noindent The time and space complexities of Bayesian inference with Variable Elimination algorithm depends on the size of the largest intermediate factor. It is a NP-hard problem to choose the elimination order that minimize the complexity.\\
+        
+        \noindent The Variable Elimination is also query sensitive, that is the query variables should be specified in advance. Each time we run a diffenerent query, we must re-run the entire algorithm.
+        
         \subsubsection{Junction tree}
-        Junction tree algorithm, or sometimes called Joint tree algorithm is another exact Bayesian inference algorithm. figure \ref{fig:bayesjunc} shows a Bayesian network and its corresponding junction tree with the assignment of the factors.\\
+        Junction tree algorithm, or sometimes called Joint tree algorithm is another exact Bayesian inference algorithm. This algorithm generalize Variable Elimination to deal with the query sensitive problem. It can execute a large number of queried simultaneously.\\
+        
+        \noindent \textbf{Define a junction tree:}\\
+        
+        The cluster graph T is a junction tree is it satisfy the following three properties:
+        
+        \begin{enumerate}
+            \item \textbf{Single connectivity:} A cluster graph satisfy singly connectivity if there is one and only one path connecting between each cluster.
+            \item \textbf{Covering:} A cluster graph satisfy covering if got each clique A of G, there is some cluster C such that A $\subseteq$ C.
+            \item \textbf{Running intersection:}  A cluster graph satisfy  running intersection if for each pair of clusters B and C that both contain \textit{x}, the cluster between the unique path connecting B and C also contains \textit{x}.
+        \end{enumerate}
+        
+        \noindent To build a junction tree, first choose an order of nodes and perform Variable elimination to obtain elimination cliques, then build the complete cluster graph over the maximum elimination cliques, after that, weight the edges and compute the maximum weight juntion tree.
+        Figure \ref{fig:bayesjunc} shows a Bayesian network and its corresponding junction tree with the assignment of the factors.\\
         
         \begin{figure}
             \centering
@@ -35,7 +59,13 @@ In this section, the related work are discussed in the following dimensions:
             \label{fig:bayesjunc}
         \end{figure}
         
-        Junction tree algorithm can be viewed as a decent way of performing Variable elimination. Pick a leaf $l_{1}$ which has only one single neighbour $l_{2}$ in the junction tree, then eliminate the unique variable which only appears in $l_{1}$
+        \noindent \textbf{Complexety of junction tree algorithm}\\
+        
+        \noindent Junction tree algorithm can be viewed as a decent way of performing Variable elimination. Different elimination orders will lead to different junction trees and finding the junction tree that have the smallest cluster is a NP-hard problem.\\
+        
+        \noindent The time and space complexity is dominated by the size of the largest cluster in the junction tree. The complexity with tabular density Bayesian Networks is \textbf{exponential} in the size of the largest cluster.
+        
+        
         %%% 还没写完
         \subsubsection{Weighted model Counting}
         To perform Bayesian Inference with Weighted model counting, the Bayesian networks are represented as multi\-linear functions and encoded into Conjunctive Normal Forms (CNF) and feed the CNFs are feed into Model Counters. The section below describes several encoding schemes to perform Weighted model counting method, and also review several existing model counters.
@@ -50,7 +80,7 @@ In this section, the related work are discussed in the following dimensions:
             Define the variables generated form Node \textbf{\textit{X}} and its parents \textbf{Y} = {$Y_{1}$, ... $Y_{n}$} as Parameter Variables.
             For a node \textbf{\textit{X}} in Bayesian Network \textbf{N}, let $\theta_{X|Y}$ denotes the parameter variable.\\
             
-            \textbf{Obtaining indicator clauses \textsc{I}:}\\
+            \noindent \textbf{Obtaining indicator clauses \textsc{I}:}\\
             For each node \textit{X} in a Bayesian Network with probability \{$x_{1}$,... ,$x_{n}$\} $\in$ \textit{X}, the following clauses are generated:
             % Indicator Clauses and Parameter Clauses
             \begin{equation}\label{fullenc_ic1}
@@ -66,7 +96,7 @@ In this section, the related work are discussed in the following dimensions:
             \end{equation}
             
             % parameter clauses
-            \textbf{Obtaining parameter clauses \textsc{P}:}\\
+            \noindent \textbf{Obtaining parameter clauses \textsc{P}:}\\
             For each node \textbf{\textit{X}} in a Bayesian Network and its parents \textbf{\textit{Y}}, the following clauses are generated:
             \begin{equation}\label{fullenc_pc1}
                 \lambda_{x_{i}} \wedge \lambda_{y_{1}} \wedge... \wedge \lambda_{y_{m}} \leftrightarrow \theta_{x_{i}|y_{1}..y{m}}
@@ -126,21 +156,21 @@ In this section, the related work are discussed in the following dimensions:
         \textbf{Nodes with cardinality = 2}\\
         Now consider the node with cardinality 2. Take an Example in asia network, in figure \ref{fig:asia-tub} node \textit{asia} has two possibilty \textit{Yes} and \textit{No}, so according to \ref{fullenc_ic1}, we have $\lambda_{Visitaisa_{yes}} \vee \lambda_{Visitaisa_{no}}$ and this will always be 1, and the same apply for $\neg\lambda_{Visitaisa_{yes}} \vee \neg\lambda_{Visitaisa_{no}}$ \\
         \newline
-        \noindent \textit{\textbf{Simplification step 1:}} If the cardinality of a node in a Bayesian Network is 2, ommit the clause in formula \ref{fullenc_ic1} and formula \ref{fullenc_ic3} in \textit{3.2.1 Full Encoding}.
+        \noindent \textit{Simplification step 1:} If the cardinality of a node in a Bayesian Network is 2, ommit the clause in formula \ref{fullenc_ic1} and formula \ref{fullenc_ic3} in \textit{3.2.1 Full Encoding}.
         \newline
         
-        \textbf{Encoding deterministic: Parameter variable = 1 or parameter variable = 0}\\
+        \noindent \textbf{Encoding deterministic:}\\
         Now take a closer look at the values in each CPT, the deterministic can be captured.\\
         
-        \noindent \textit{\textbf{Simplification step 2:}} When the parameter variable $\theta_{x_{i}|y_{1}..y_{m}}$ = 0, the parameter clause \textbf{P} described by \ref{fullenc_pc1} can be written as a single clause: $$\neg\lambda_{x_{i}} \vee \neg\lambda_{y_{1}} \vee... \vee \neg\lambda_{y_{m}}.$$
+        \noindent \textit{Simplification step 2:} When the parameter variable $\theta_{x_{i}|y_{1}..y_{m}}$ = 0, the parameter clause \textbf{P} described by \ref{fullenc_pc1} can be written as a single clause: $$\neg\lambda_{x_{i}} \vee \neg\lambda_{y_{1}} \vee... \vee \neg\lambda_{y_{m}}.$$
         
-        \cite{enc1} gives the explanation of this step: If network variable $\theta_{x_{i}|y_{1}..y_{m}}$ = 0, then each term with indicator variables $\lambda_{x}, \lambda_{y_{1}}, \lambda_{y_{2}}, ..., \lambda_{y_{m}}$ is multiplied by 0 in the multi\-linear function, thus those clauses have no contributions to he multi\-linear function.\\
+        \noindent \cite{enc1} gives the explanation of this step: If network variable $\theta_{x_{i}|y_{1}..y_{m}}$ = 0, then each term with indicator variables $\lambda_{x}, \lambda_{y_{1}}, \lambda_{y_{2}}, ..., \lambda_{y_{m}}$ is multiplied by 0 in the multi\-linear function, thus those clauses have no contributions to he multi\-linear function.\\
         \newline
-        \noindent \textit{\textbf{Simplification step 3:}}When the parameter variable $\theta_{x_{i}|y_{1}..y_{m}}$ = 1, the parameter can be omitted and the clause \ref{fullenc_PI} and \ref{fullenc_IP} can be eliminated from the encoding.\\
+        \noindent \textit{Simplification step 3:} When the parameter variable $\theta_{x_{i}|y_{1}..y_{m}}$ = 1, the parameter can be omitted and the clause \ref{fullenc_PI} and \ref{fullenc_IP} can be eliminated from the encoding.\\
         
-        The explanation is given in section 4.2 in \cite{enc1} 
+        \noindent The explanation is given in section 4.2 in \cite{enc1} 
         Since $\theta_{x_{i}|y_{1}..y_{m}}$ = 1, terms with includes $\lambda_{x_{i}}, \lambda_{y_{1}}, ..., \lambda_{y_{m}}$ are multiplied by 1. 
-        Consider the example with a network Either in Asia Bayesian network in figure
+        Consider the example with a network Either in Asia Bayesian network in Figure \ref{fig:either01}
         
         \begin{figure}[h]
             \centering
@@ -149,7 +179,7 @@ In this section, the related work are discussed in the following dimensions:
             \label{fig:either01}
         \end{figure}
         
-        After simplification, the clause generated by node \textit{Either}:\\
+        \noindent After simplification, the clause generated by node \textit{Either}:\\
         \begin{center}
             $\neg \lambda_{Either_{yes}} \vee \neg \lambda_{Lung_{no}} \vee \neg  \lambda_{TB_{no}} $\\
             $\neg \lambda_{Either_{No}} \vee \neg \lambda_{Lung_{yes}} \vee \neg \lambda_{TB_{yes}}$\\
@@ -157,9 +187,10 @@ In this section, the related work are discussed in the following dimensions:
             $\neg  \lambda_{Either_{No}} \vee \neg  \lambda_{Lung_{yes}} \vee \neg  \lambda_{TB_{no}}$
         \end{center}
         
-        In paper \cite{enc2} proved that this simplification will lead to large reduction in the CNF sizes, the results are further discusses in \textcolor{red}{Section 7.3 Encoding deterministic}.\\
+        \noindent In paper \cite{enc2} proved that this simplification will lead to large reduction in the CNF sizes, the results are further discusses in \textcolor{red}{Section 7.3 Encoding deterministic}.\\
         
-        \textbf{Weights assigning rules}:\\
+        \noindent \textbf{Weights assigning rules}:\\
+        
         \noindent For each CNF literal, we need to assign a weight. These are the rules for assigning weights
         \begin{itemize}
             \item For both positive and negative indicator variables, assign weights to 1.
@@ -178,7 +209,7 @@ In this section, the related work are discussed in the following dimensions:
         \end{center}
         The weight of the rest of the literals equals to 1. \\
         
-        Now for each model, the weight of one model equals the product of all positive parameter variables. 
+        \noindent Now for each model, the weight of one model equals the product of all positive parameter variables. 
         $$\textbf{\textbf{W}} = \prod_{i = 0}^{n} Weight(\theta_{X_{n}}) $$
         The process to answer specific queries is to change the weight of variables with contradicting subscript to the indicators to 0.
         
@@ -318,7 +349,36 @@ In this section, the related work are discussed in the following dimensions:
         \cite{Sang:2005:PBI:1619332.1619409}
         \subsubsection{Log-encoding}
         \cite{2016-logencoding}
-        Insert log-encoding here
+        In \cite{2016-logencoding}, the author proposed an Encoding scheme based on the Group Encoding method. There are two key steps in this encoding. First, a logarithm encoding to define indicator variables. Second, a scaling factor within each CPT to scale the weight assigning.\\
+        
+        \noindent First consider the logarithm encoding, this step is similar to the binary encoding. For a node with N indicator variables, $\lceil N \rceil$ of propositional variables are used to represent the indicator variables. Table \ref{tab:log_example} shows an example log encoding.\\
+        \begin{table}[]
+            \centering
+            \begin{tabular}{c l}
+                \hline
+                \hline
+                Node Variables	&	Encoded clauses	\\
+                \hline
+                $X_{1}$	&	$\neg c_{0} \wedge \neg c_{1}$	\\
+                $X_{2}$	&	$\neg c_{0} \wedge c_{1}$	\\
+                $X_{3}$	&	$ c_{0} \wedge \neg c_{1}$	\\
+                \hline
+                Exclude extra enc: & $c_{0} \vee  c_{1}$\\
+                \hline
+                \hline
+            \end{tabular}
+            \caption{An example log encoding of indicator variables}
+            \label{tab:log_example}
+        \end{table}
+        
+        \noindent The notation for encoded indicator clauses in \cite{2016-logencoding} is $\tau((X, d))$, in which \textit{X} is the set of propositional variables and \textit{d} indicates which propositional variable is positive in the clauses. For each parameter clauses, we have the following two kinds of situations:
+        
+        \begin{itemize}
+            \item If the parameter value Pr($\theta_{m}$) = 0: $\bigvee \neg \tau(X, d)$ 
+            \item If the parameter value Pr($\theta_{m}$) $\neq$ 0: $\bigvee \neg \tau(X, d) \vee \theta_{m}$ 
+        \end{itemize}
+        
+        Then we consider the weight assigning rules. After multi-variable simplification is performed within a CPT, select the remained non-zero parameter that is the most frequent as the scaling factor for the weights, and use $W_{x}$ to 
 
 
     \subsection{Exact Model Counters}

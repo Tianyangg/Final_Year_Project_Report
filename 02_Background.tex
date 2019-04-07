@@ -1,11 +1,6 @@
 \newpage
-\section{Required Background Knowledge}
-    % \subsection{Joint probability distribution}
-    % \textcolor{red}{check this!}\\
-    % Given random variables \textbf{\textit{X,Y,...}} on a probability space $(\Omega, \mathcal{F}, \mathcal{P})$, joint probability distribution for \textbf{\textit{X,Y}} is the probability distribution that gives the ...
-    % Let $$P(x_{1}, ..., x_{n}) = P(X=x_{1}, ... , X = x_{n})$$ denotes the probability of variables $X_{1}$ in sate $x_{1}$ etc. \par
-    % A Bayesian n
-    % We use the notation: $$P(x_{i}, x_{j}) = P(X_{i} = x, Y)$$ to denote the probability
+\section{Background Knowledge}
+This section will first introduce Bayesian Network and Bayesian inference, then, it will introduce logic normal forms, and several other concepts to aid the understanding of the later sections.
     \subsection{Bayesian Network}
     The variable domain in this report refers to finite domains. The definition of the Bayesian network is from \cite{2008-literature-review}\\
     \begin{itemize}
@@ -32,6 +27,10 @@
     \end{figure}
     
     \subsection{Exact Bayesian Inference}
+    % Given a Joint density for X = $(X_{i}, i \in V)$ of the following form:
+    % $$p(u) = \frac{1}{Z} \Pi_{c \in C} \Phi_{c}(u_(c))$$
+    % Compute the marginal density of $X_{Q}$:
+    % $$p_{q}(v) = \Sigma_{u \in X_{\bar{Q}}} \frac{1}{Z} \Pi_{c \in C} \Phi_{C}(v_{c} \cup u_{c})$$
     Given an Bayesian Network BN over Variables ${X, Y...}$. and probability distributions Pr. There are three reasonable questions to ask regarding the probability distributions:
     \begin{itemize}
         \item What is the most likely instantiation of network variables X given some evidence \textbf{e}
@@ -71,9 +70,7 @@
     According to \cite{Darwiche:2011:SNC:2283516.2283536}, Sensitional Decision Diagram (SDD) is a Boolean function F(X,Y) which can always be decomposed into the following format:
     $$f(\textbf{X, Y}) = (p_{1}(X) \wedge s_{1}(Y)) \vee (p_{n}(X) \wedge s_{n}(Y)) $$
     The X and Y are disjoint set that $X \wedge Y = \emptyset$ and the decomposition satisfies the \textbf{X-Y partition}. It has been shown in \cite{Darwiche:2011:SNC:2283516.2283536} that it is a traceable representation of Boolean function.
-    
-    \subsection{X-Y partition}
-    X-Y partition holds if the decomposition of the boolean function satisfy the following:
+    \textbf{X-Y partition} holds if the decomposition of the boolean function satisfy the following:
     \begin{itemize}
         \item  $\forall$ i, $p_{i} \neq FALSE$;
         \item for $i \neq j$, $p_{i} \wedge p_{j} = FALSE$

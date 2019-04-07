@@ -1,3 +1,52 @@
 \newpage
 \appendix
-Running the code
+\section*{How to run}
+\subsection*{Encoding}
+
+\subsection*{Running miniC2D}
+To download the model counter, go to page \textcolor{blue}{http://reasoning.cs.ucla.edu/minic2d/download.php}\\
+To run the model counter, go to the downloaded folder.
+\begin{lstlisting}
+$ cd bin/darwin
+For model counting
+$ ./miniC2D -c <path to the CNF file> - C
+\end{lstlisting}
+A sample output of Model Counting:\\
+\noindent\rule{15cm}{0.4pt}
+\begin{lstlisting}
+CNF stats: 
+  Vars=36 / Clauses=92
+  CNF Time	0.000s
+Constructing vtree (from primal graph)...Wrong cut! 2 1
+Wrong cut! 3 2
+  DONE
+Vtree stats:
+  Vtree widths: con<=4, c_con=44 v_con=4
+  Vtree Time	0.003s
+Compiling... DONE
+  NNF memory      	11.5 KB
+  Learned clauses      	1
+Cache stats:
+  hit rate   	43.8%
+  lookups    	32
+  ent count  	18
+  ent memory 	0.9 KB
+  ht  memory 	152.6 MB
+  clists     	1.0 ave, 1 max
+  keys       	4.1b ave, 8.0b max, 2.0b min
+  Compile Time	0.000s
+Saving compiled NNF to file... DONE
+  Save Time       	0.001s
+NNF stats:
+  Nodes           	281
+  Edges           	418
+Post compilation
+  Loading NNF from file... DONE
+  Load Time       	0.000s
+NNF stats:
+  Nodes           	281
+  Edges           	418
+  Counting... 128 models / 0.000s
+Total Time: 0.114s
+\end{lstlisting}
+\noindent\rule{15cm}{0.4pt}

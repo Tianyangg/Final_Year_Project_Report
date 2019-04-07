@@ -1,2 +1,14 @@
 \newpage
 \section{Dependencies}
+\subsection{External Libraries}
+In this project all the built process were completed using Python 3.7. Several libraries were used because it is no use in implementing things such as parser to parse a Bayesian Network files. The focus should be implementing the algorithms in the encodng process. Libraries except the Python standard libraries are:
+\begin{itemize}
+      \item Pgmpy, used for reading Bayesian Network files (with BIF format), and representing Bayesin Networks. \textcolor{blue}{https://pypi.org/project/pgmpy/}
+     \item qm 0.2, used for boolean logic QM algorithm.
+    \textcolor{blue}{https://pypi.org/project/qm/0.2/}
+\end{itemize}
+    
+
+
+\subsection{Model Counter}
+In this project, the evaluation process were completed using a well developed software package miniC2D Version 1.0.0 \textcolor{blue}{http://reasoning.cs.ucla.edu/minic2d/}. It supports knowledge compilation that compile CNFs into Sensational Decision Diagrams (SDD), and it can also perform model counting. 
