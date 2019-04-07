@@ -345,10 +345,18 @@ In this section, the related work are discussed in the following dimensions:
         
         In order to generate prime implicants for Bayesian Network variables, the QM algorithm need to be extended. In \cite{2006-enc3}, the paper cited was not found so I extended the QM algorithm in a straightforward way and will be discussed in seciton \textcolor{red}{4.7.2}
         
-        \subsubsection{Sang's Encoding}
-        \cite{Sang:2005:PBI:1619332.1619409}
+        \subsubsection{Cachet Encoding}
+        The Cachet encoding we are refereing to is based on the encoding presented in \cite{Sang:2005:PBI:1619332.1619409}. One of the assumption in this encoding is that there's an ordering on the values for each network variable. We call $x_{i} < x_{j}$ if $x_{i}$ comes earlier in the variable value.\\
+        
+        Cachet Encoding provide same indicator variables as Full encoding. For the parameter in a nerwork Pr($x|Y$), when x is not the latest value in X, define a parameter variable $\rho_{x|Y}$.
+        
+        Then the Cachet encoding \textbf{define the CNFs}: Cachet encoding generate the same indicator clauses as Full encoding. For each network variable, Cachet encoding provide the following clauses for parameter value $Pr(x_{i}|y_{1}, ... , y_{m})$.
+        \begin{itemize}
+            \item If x is not X's last value: $$\lambda_{y_{1}} \wedge ... \wedge \lambda_{y_{m}} \wedge \neg \rho x_{1|Y} \wedge \neg \rho x_{i-1|Y} \wedge \rho_{x_{i}|Y} \rightarrow \lambda_{x_{i}}$$
+            \item If x is X's last value:
+            $$\lambda_{y_{1}} \wedge ... \wedge \lambda_{y_{m}} \wedge \neg \rho x_{1|Y} \wedge \neg \rho x_{i-1|Y} \rightarrow \lambda_{x_{i}}$$
+        \end{itemize}
         \subsubsection{Log-encoding}
-        \cite{2016-logencoding}
         In \cite{2016-logencoding}, the author proposed an Encoding scheme based on the Group Encoding method. There are two key steps in this encoding. First, a logarithm encoding to define indicator variables. Second, a scaling factor within each CPT to scale the weight assigning.\\
         
         \noindent First consider the logarithm encoding, this step is similar to the binary encoding. For a node with N indicator variables, $\lceil N \rceil$ of propositional variables are used to represent the indicator variables. Table \ref{tab:log_example} shows an example log encoding.\\
@@ -378,7 +386,10 @@ In this section, the related work are discussed in the following dimensions:
             \item If the parameter value Pr($\theta_{m}$) $\neq$ 0: $\bigvee \neg \tau(X, d) \vee \theta_{m}$ 
         \end{itemize}
         
-        Then we consider the weight assigning rules. After multi-variable simplification is performed within a CPT, select the remained non-zero parameter that is the most frequent as the scaling factor for the weights, and use $W_{x}$ to 
+        Then we consider the weight assigning rules. After multi-variable simplification is performed within a CPT, select the remained non-zero parameter $\theta_{j}$ that is the most frequent as the scaling factor for the weights, and use $W_{\theta_{j}}$ to denote the scaling variable. For all parameter vairiable $\theta_{i}\; i \neq j$, 
+        $$W(\theta_{i}) = \frac{OriginalWeight(\theta_{i})}{W(\theta_{j})}$$
+        For negative parameter variables:
+        $$W(\neg \theta_{i}) = 1 - W(\theta_{i})$$
 
 
     \subsection{Exact Model Counters}
@@ -410,11 +421,11 @@ In this section, the related work are discussed in the following dimensions:
         \label{fig:searchfig}
     \end{figure}
     
-    Compared to the Compile-based model counters, model counters by searching require less computational space. One of the most widely search\-based model counter is called cachet proposed in \cite{Cachet}, combined with the encoding method we discussed in \textcolor{red}{Need to add that part}, it showed strong ability to perform probabilistic inference and the result was demonstrated in \cite{Sang:2005:PBI:1619332.1619409}\\
+    Compared to the Compile-based model counters, model counters by searching require less computational space. One of the most widely search\-based model counter is called cachet proposed in \cite{Cachet}, combined with the encoding method we discussed in \textcolor{red}{1.2.5 Cachet Encoding}, it showed strong ability to perform probabilistic inference and the result was demonstrated in \cite{Sang:2005:PBI:1619332.1619409}\\
     
-    \textbf{SharpSAT:}\\
+    \noindent \textbf{SharpSAT:}\\
     Similar to Cachet, the SharpSAT first proposed in \cite{Sharp-SAT2006} used the DPLL algorithm \\
-    Some of the algorithms such as \textcolor{red}{DPLL with caching: aNEW ....} improved the performance using techniqes such as Component Caching
+    Some of the algorithms such as \textcolor{red}{DPLL with caching: a NEW ....} improved the performance using techniqes such as Component Caching
     \subsubsection{Compile based model counter}
     Another categrory of model counter use knowledge compilation, which the process aims to compile one type logic form into another one.\cite{2008-literature-review} In \cite{2002language-map}, a \textit{represented language} (such as CNF) is defined as sth we expect human to read and write without too much effort, and the \textit{target compilation langauge} are in the form such that it can repond queried in poly\-time. Some of the widely used compile\-based model counters are C2D and miniC2D.\\
     
