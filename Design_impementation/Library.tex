@@ -1,9 +1,9 @@
 
 \subsection{Pgmpy}
-The library to read and represent Bayesian networks is Pgmpy \cite{pgmpy_paper}. With Pgmpy, Bayesian network can be easily created, and it also support reading Bayesian networks from BIF format. The library is opensource so that it can be modified and extended if required. Pgmpy also have build-in inferencing method using Variable Elimination so that the run time can be used to evaluate the performance. 
+The library to read and represent Bayesian networks is Pgmpy \cite{pgmpy_paper}. With Pgmpy, Bayesian network can be easily created, and it also supports reading Bayesian networks from BIF format. The library is open-source so that it can be modified and extended if required. Pgmpy also has build-in inference method using Variable Elimination so that the run time can be used to evaluate the performance. 
 
  \subsection{Extend the Pgmpy library}
-    Pgmpy library does not support fetching CPT values using table indexing, the only way to fetch value is through specifying evidence and variables and query the value through Variable Elimination method. The Variable Elimination method is the bayesian inference method that is \textcolor{red}{Insert time complexety}. To solve the problem, I extended the pgmpy library to support fetching variable values without querying using Variable Elimination.\\
+    Pgmpy library does not support fetching CPT values using table indexing, the only way to fetch value is through specifying evidence and variables and query the value through Variable Elimination method. The Variable Elimination itself a Bayesian inference method that is time consuming. To solve the problem, we extended the pgmpy library to support fetching variable values without querying using Variable Elimination.\\
 
     \noindent \textbf{The TabularCPD Class}:\\
     The method get\_cpds returns a conditional probability distribution of the node, the returned type is defined as TabularCPD that contains the name of the node, cardinality, variables which are stores as a nested list, the list of evidences and their corresponding cardinalities. An example is given below:
@@ -23,7 +23,7 @@ The library to read and represent Bayesian networks is Pgmpy \cite{pgmpy_paper}.
     \end{lstlisting}
 
    \noindent \textbf{MyCPD}:\\
-    col\_index stores the index of the combination of evidence, in the same order as the probability distribution defined in the \textbf{standard node block}. The col\_index is constructed using the itertools.product in python which return the cartesian product. The transpose of the col\_index correspond to the order of the probability distribution specify in the BIF file. Consider the example with node \textit{dysp}.
+    col\_index stores the index of the combination of evidence, in the same order as the probability distribution defined in the \textbf{standard node block}. The col\_index is constructed using the \textit{itertools.product} in python which return the Cartesian product. The transpose of the col\_index correspond to the order of the probability distribution specified in the BIF file. Consider the example with node \textit{dysp}.
     \begin{lstlisting}
     >> col_indexes = np.array(list(product(*[range(i) for i in ev_card])))
     >> print(evidence, col_index) 
@@ -77,21 +77,29 @@ The library to read and represent Bayesian networks is Pgmpy \cite{pgmpy_paper}.
      ('dysp', 1, [('bronc', 0), ('either', 1)], 0.2), 
      ('dysp', 1, [('bronc', 1), ('either', 1)], 0.9)]
     \end{lstlisting}
-    The method mycpd(TabularCPD) returns a table\-like list of tuples, the first two element in each tuple forms the node variables and the third element is a list of evidence. An example of the first tuple in the list means $dysp_{0}|bronc_{0}either_{0} = 0.9$. Now the returned data support fetching values using list indexing so that we don't need to query the value using the time-consuming Variable Elimination.\\ 
+    The method mycpd(TabularCPD) returns a table\-like list of tuples, the first two elements in each tuple forms the node variables and the third element is a list of evidence. An example of the first tuple in the list means $dysp_{0}|bronc_{0}either_{0} = 0.9$. Now the returned data support fetching values using list indexing so that we don't need to query the value using the time-consuming Variable Elimination.\\ 
     
     
-    \noindent In our case for both bronc and either, the evidence all equals to 2, the convention for the order is shown in figure \ref{fig:sample print table}. The list which store the values are the transpose of the matrix in BIF format.\\
-    \begin{figure}
-        \centering
-        \includegraphics[width = 0.7\textwidth]{pic/printBayesnode.png}
-        \caption{A sample printed CPT of a node dyps}
-        \label{fig:sample print table}
-    \end{figure}
+    \noindent In our case for both bronc and either, the evidence all equals to 2, the convention for the order is shown below. The list which store the values are the transpose of the matrix in BIF format.\\
+    
+    \begin{lstlisting}
+    +--------+----------+----------+----------+----------+
+    | bronc  | bronc_0  | bronc_0  | bronc_1  | bronc_1  |
+    +--------+----------+----------+----------+----------+
+    | either | either_0 | either_1 | either_0 | either_1 |
+    +--------+----------+----------+----------+----------+
+    | dysp_0 | 0.9      | 0.8      | 0.7      | 0.1      |
+    +--------+----------+----------+----------+----------+
+    | dysp_1 | 0.1      | 0.2      | 0.3      | 0.9      |
+    +--------+----------+----------+----------+----------+
+
+    \end{lstlisting}
+    
     
 \subsection{Storing variables, weights and CNFs}
 There are three important storage in the implementation, the generated variables, corresponding weights and the representation of CNFs.\\
 
-\noindent Variables in the CNFs and its corresponding weights are stored in python dictionaries. One of the consideration is the speed of looking up  a certain variable weights or its corresponding integer used in the DIMAC format. Encoding Bayesian networks might lead to dealing with large number of variables. Some of the results \cite{2008-literature-review} shows that the variable numbers might reach over 50,000. \\
+\noindent Variables in the CNFs and its corresponding weights are stored in python dictionaries. One of the consideration is the speed of looking up  a certain variable weights or its corresponding integer used in the DIMAC format. Encoding Bayesian networks might lead to dealing with large number of variables. Some of the results \cite{2008-literature-review} showed that the variable numbers might reach over 50,000. \\
 
 \noindent If we use a list of pairs to store the variables or the weights, the time complexity for looking up a list is \textbf{O}(n) for linear search over the list. However, the time complexity for looking up in the dictionary is \textbf{O}(1). When dealing with large number of variables, the time difference is substantial. In addition, adding the dictionary operation 'add' is an process with O(1) regardless of the size of the dictionary. The key in the variable is the name of the variable, \textit{weights} stores its corresponding weight and the var\_dic stores the integer used to represent the variable in the DIMAC format.
 
@@ -107,4 +115,4 @@ weights = {
 }
 \end{lstlisting}
 
-\noindent The CNF clauses are stored as a list of lists. Inner list represent one clause that are the disjunction of literals, and the outer list represent the conjunction of the clauses. We use list to store the clauses because once a clause is generated and append to the list, it won't be modified during the later process, and no other operation such as list lookup is needed. The only operation is to traverse each clause in the list that the CNF to write to files.
+\noindent The CNF clauses are stored as a list of lists. Inner list represents one clause that are the disjunction of literals, and the outer list represents the conjunction of the clauses. We use list to store the clauses because once a clause is generated and append to the list, it won't be modified during the later process, and no other operation such as list lookup is needed. The only operation is to traverse each clause in the list that the CNF to write to files.

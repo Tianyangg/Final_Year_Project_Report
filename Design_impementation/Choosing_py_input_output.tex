@@ -1,14 +1,14 @@
 \subsection{Programming Language}
-I used \textbf{Python} for the implementation. Although python programs are generally expected to run slower than some other Object-oriented programming languages like JAVA and C++, it enables the programs to become three to five times shorter than JAVA and five to ten times shorter than C++.\footnote{https://www.python.org/doc/essays/comparisons/}, 
+We used \textbf{Python} for the implementation. Although python programs are generally expected to run slower than some other Object-oriented programming languages like JAVA and C++, it enables the programs to become three to five times shorter than JAVA and five to ten times shorter than C++ \footnote{https://www.python.org/doc/essays/comparisons/}, 
 and Python also supports powerful dictionary and list types. \\
 
 \noindent Another reason for using Python is that with certain libraries, Bayesian Networks can be imported or defined in a simple way, so that it supports testing the performance with widely used benchmarks.
 
 \subsection{Input format}
-The input is the \textbf{Bayesian Interchange Format} (BIF) which are files with .bif extension to represent Bayesian Networks. The BIF files are used as input because it's a widely used format in tools that are dealing with Bayesian Networks including BayesiaLab \footnote{http://www.bayesia.com/}, JavaBayes\footnote{https://www.cs.cmu.edu/~javabayes/Home/} etc, so there are a lot of available benchmarks with the BIF Format. In general, Four types of blocks are defined.\\
+The input is the \textbf{Bayesian Interchange Format} (BIF) which are files with .bif extension to represent Bayesian Networks. The BIF files are used as input because it's a widely used format in tools that are dealing with Bayesian Networks such as BayesiaLab \footnote{http://www.bayesia.com/}, and  JavaBayes\footnote{https://www.cs.cmu.edu/~javabayes/Home/}, so there are a lot of available benchmarks with the BIF Format. In general, four types of blocks are defined.\\
 
 \noindent \textbf{The Network Block:}\\
-\noindent A network block defines the name of the network and lists the properties. The example below specify the network block for the Asia Bayesian Network:
+\noindent A network block defines the name of the network and lists the properties. The example below specifies the network block for the Asia Bayesian Network:
 \begin{lstlisting}
 network asia{
   property version 1.1;
@@ -46,7 +46,7 @@ table 0.586357 0.667473 0.789088 0.466932
       0.413643 0.332527 0.210912 0.533068;
 }
 \end{lstlisting}
-A more detailed explanation of the BIF is explained here: \footnote{http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm} \\
+A more detailed explanation of the BIF is explained here \url{http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm}\\
 
 \subsection{Output}
 The output of the program is the cnf file following the DIMACS format which is a widely accepted standard format for representing CNF clauses and it's also the input format used by most of the model counters mentioned in section 3.3.\\

@@ -8,7 +8,7 @@ In this section, the related work are discussed in the following dimensions:
 \end{enumerate}
     \subsection{Bayesian inference methods}
         \subsubsection{Variable Elimination}
-        Variable Elimination is a Exact inference method. The idea is to exploit the structure by eliminating the non-observed and non-queried variables once at a time.\\
+        Variable Elimination is a Exact inference method propsed in \cite{Varelimination}. The idea is to exploit the structure by eliminating the non-observed and non-queried variables once at a time.\\
         
        \noindent A Factor is a function from a tuple of random variables to a number, denoted by $f(X_{1}, X_{2}, ... , X_{j})$, it denotes a distribution over $\{X_{1}, .., X_{j}\}$. 
         \begin{itemize}
@@ -37,11 +37,11 @@ In this section, the related work are discussed in the following dimensions:
         \noindent The Variable Elimination is also query sensitive, that is the query variables should be specified in advance. Each time we run a diffenerent query, we must re-run the entire algorithm.
         
         \subsubsection{Junction tree}
-        Junction tree algorithm, or sometimes called Joint tree algorithm is another exact Bayesian inference algorithm. This algorithm generalize Variable Elimination to deal with the query sensitive problem. It can execute a large number of queried simultaneously.\\
+        Junction tree algorithm, or sometimes called Joint tree algorithm is another exact Bayesian inference algorithm introduced in \cite{junctree}. This algorithm generalize Variable Elimination to deal with the query sensitive problem. It can execute a large number of queried simultaneously.\\
         
         \noindent \textbf{Define a junction tree:}\\
-        
-        The cluster graph T is a junction tree is it satisfy the following three properties:
+
+        \noindent The cluster graph T is a junction tree is it satisfy the following three properties:
         
         \begin{enumerate}
             \item \textbf{Single connectivity:} A cluster graph satisfy singly connectivity if there is one and only one path connecting between each cluster.
@@ -66,13 +66,14 @@ In this section, the related work are discussed in the following dimensions:
         \noindent The time and space complexity is dominated by the size of the largest cluster in the junction tree. The complexity with tabular density Bayesian Networks is \textbf{exponential} in the size of the largest cluster.
         
         
-        %%% 还没写完
         \subsubsection{Weighted model Counting}
         To perform Bayesian Inference with Weighted model counting, the Bayesian networks are represented as multi\-linear functions and encoded into Conjunctive Normal Forms (CNF) and feed the CNFs are feed into Model Counters. The section below describes several encoding schemes to perform Weighted model counting method, and also review several existing model counters.
     
     \subsection{Encoding Bayed to CNF}
         \subsubsection{Full encoding}
-            \textbf{Generating CNFs}
+            The first encoding algorithm that we called Full encoding, was proposed in \cite{enc1}, In this section, we will first define the logical variables and introduce the steps to generate the clauses.\\
+            
+            \noindent \textbf{Generating CNFs}
             \newline
             Given a Bayesian Network, two types of variables are generated.
             Define the variables generated from Node \textbf{\textit{X}} as Indicator Variables.
@@ -103,7 +104,7 @@ In this section, the related work are discussed in the following dimensions:
             \end{equation}
             
             % parameter clauses
-            The following equation is the equivalent of \ref{fullenc_pc1} written in the way that meet the requirement of CNF.
+           \noindent The following equation is the equivalent of \ref{fullenc_pc1} written in the way that meet the requirement of CNF.
             \begin{equation}\label{fullenc_IP}
                 \neg\lambda_{x_{i}} \vee \neg\lambda_{y_{1}} \vee... \vee \neg\lambda_{y_{m}} \vee \theta_{x_{i}|y_{1}..y_{m}}
             \end{equation}
@@ -111,7 +112,7 @@ In this section, the related work are discussed in the following dimensions:
                 \neg\theta_{x_{i}|y_{1}..y_{m}} \vee \lambda_{x_{i}},\\ \;\;
                 \neg\theta_{x_{i}|y_{1}..y_{m}} \vee \lambda_{y_{j}} \;\; \mbox{ j = 1, ..., m}
             \end{equation}
-            An example is given below from, consider a Bayesian network 'Asia', figure \ref{fig:asia-tub} shows two of the nodes 'asia' and 'tub'.
+            An example is given below. Consider a Bayesian network 'Asia', figure \ref{fig:asia-tub} shows two of the nodes 'asia' and 'tub'.
             
             \begin{figure}[h]
             \centering
@@ -152,8 +153,10 @@ In this section, the related work are discussed in the following dimensions:
             $\theta_{TB_{N}|asia_{Y}} \rightarrow \lambda_{asia_{Y}}$\\
             \end{multicols}
             
-        \subsubsection{Simplified full encoding}
-        \textbf{Nodes with cardinality = 2}\\
+        \subsubsection{Simplified Full encoding}
+        The second encoding scheme, which we refer to as Simplified Full encoding, is the simplification of the previous encoding scheme presented in \cite{enc1}. The main simplification is to capture the deterministic of Bayesian Networks.\\
+        
+        \noindent \textbf{Nodes with cardinality = 2}\\
         Now consider the node with cardinality 2. Take an Example in asia network, in figure \ref{fig:asia-tub} node \textit{asia} has two possibilty \textit{Yes} and \textit{No}, so according to \ref{fullenc_ic1}, we have $\lambda_{Visitaisa_{yes}} \vee \lambda_{Visitaisa_{no}}$ and this will always be 1, and the same apply for $\neg\lambda_{Visitaisa_{yes}} \vee \neg\lambda_{Visitaisa_{no}}$ \\
         \newline
         \noindent \textit{Simplification step 1:} If the cardinality of a node in a Bayesian Network is 2, ommit the clause in formula \ref{fullenc_ic1} and formula \ref{fullenc_ic3} in \textit{3.2.1 Full Encoding}.
@@ -187,7 +190,7 @@ In this section, the related work are discussed in the following dimensions:
             $\neg  \lambda_{Either_{No}} \vee \neg  \lambda_{Lung_{yes}} \vee \neg  \lambda_{TB_{no}}$
         \end{center}
         
-        \noindent In paper \cite{enc2} proved that this simplification will lead to large reduction in the CNF sizes, the results are further discusses in \textcolor{red}{Section 7.3 Encoding deterministic}.\\
+        \noindent In paper \cite{enc2} proved that this simplification will lead to large reduction in the CNF sizes, the results are further discusses in Section 7.3 Encoding deterministic.\\
         
         \noindent \textbf{Weights assigning rules}:\\
         
@@ -215,11 +218,10 @@ In this section, the related work are discussed in the following dimensions:
         
         
         \subsubsection{Improved Encoding}
-        Note: this encoding is done based on the Full encoding in section. 
-        The idea is to use less clauses and variables to encode the CPT by encoding equal parameters. A key observation of the CPT is that using the Improved Full Encoding, no two parameter variables generated from the same CPT can be set as TRUE simultaneously, since their network instantiations are not consistent. \cite{enc2} proposed that within a CPT, if there are multiple \textbf{non-extreme} variables that has the same value, instead of generating new variables each time, we can use one logic variable to represent the parameter values.\\
+        The third Encoding Scheme, which we refer to as Improved Encoding, was introduced in \cite{enc2} based on the Simplified Full encoding scheme.
+        The idea was to use less clauses and variables to encode the CPT by encoding equal parameters. A key observation of the CPT is that using the Improved Full Encoding, no two parameter variables generated from the same CPT can be set as TRUE simultaneously, since their network instantiations are not consistent. \cite{enc2} proposed that within a CPT, if there are multiple \textbf{non-extreme} variables that has the same value, instead of generating new variables each time, we can use one logic variable to represent the parameter values.\\
         
-        \noindent \textbf{\textit{Improved Encoding Steps:}}\\
-        \textbf{Obtaining indicator clauses \textsc{I}:}\\
+        \noindent \textbf{Obtaining indicator clauses \textsc{I}:}\\
         For each node \textit{X} in a Bayesian Network with probability \{$x_{1}$,... ,$x_{n}$\} $\in$ \textit{X}, the following clauses are generated:
         \begin{equation}\label{Improvedenc_ic}
             \lambda_{x_{1}} \vee ... \vee \lambda_{x_{n}}
@@ -267,8 +269,8 @@ In this section, the related work are discussed in the following dimensions:
         \end{equation}
         This introduced new models compared to the Full Encoding method in \cite{enc1}, while according to \cite{enc2}, the newly introduced model has larger cardinality and this can be solved by adding a condition when the output is fed into the model counter.\\
         
-        \noindent\textit{ Thereom}\cite{enc2}: Consider a Bayesin network with n variables, the cardinality of the models for CNFs  generated by Full encoding (denoted by \textbf{A}) equals to 2n, the cardinality of the models for CNF generated by Improved encoding that are not in \textbf{A} is larger than 2n.\\
-        Therefore, the unwanted models have a higher cardinality (/> 2n), by minimizing during model counting. we can drop the PI clauses defined in equaltion \ref{fullenc_PI} during the encoding process.
+        \noindent\textbf{Theorem}\cite{enc2}: Consider a Bayesian network with n variables, the cardinality of the models for CNFs  generated by Full encoding (denoted by \textbf{A}) equals to 2n, the cardinality of the models for CNF generated by Improved encoding that are not in \textbf{A} is larger than 2n.\\
+        Therefore, the unwanted models have a higher cardinality ($>$ 2n), by minimizing during model counting. we can drop the PI clauses defined in equation \ref{fullenc_PI} during the encoding process.
         \end{itemize}
         
         \noindent Use DP\%  to describe the percentage of remaining variables if we use the same variable to represent the same values within a CPT. \cite{2008-literature-review} showed that the reduction can be up to 95\% for some of the experimented networks.\\
@@ -277,11 +279,11 @@ In this section, the related work are discussed in the following dimensions:
         %Consider the node $\theta_{Dysp_{yes}|Bronc_{yes},either_{yes}} = 0.9$ and $\theta_{Dysp_{no}|Bronc_{no},either_{no}} = 0.9$,  If we follow the encoding method described in Full encoding, the following clauses are generated.
         \subsubsection{Group Encoding}
     
-        The Improved Encoding discussed in \textcolor{red}{Section 3.2.3} gives an improvement of encoding Bayesian Networks by encoding equal parameter values. \cite{2006-enc3} proposed a method which use less variables by pre-processing the CNF to simplify the clauses.\\
+        The Improved Encoding discussed in Section 3.2.3 gives an improvement of encoding Bayesian Networks by encoding equal parameter values. \cite{2006-enc3} proposed a method which use less variables by pre-processing the CNF to simplify the clauses. In this report, we call this encoding scheme Group Encoding.\\
         
-        For each CPT, the rows which has the non-extreme values are partitioned into several groups based on the value. Within each group, we apply a simplification to try to reduce the number of variables and clauses inspired by the resolution strategy in boolean logic.\\
+        \noindent For each CPT, the rows which has the non-extreme values are partitioned into several groups based on the value. Within each group, we apply a simplification to try to reduce the number of variables and clauses inspired by the resolution strategy in Boolean logic.\\
         
-        In boolean logic, Consider two clauses $\alpha \vee \beta \vee \gamma$  and $\alpha \vee \neg\beta \vee \gamma$
+        \noindent In Boolean logic, Consider two clauses $\alpha \vee \beta \vee \gamma$  and $\alpha \vee \neg\beta \vee \gamma$
         replace them with a single clause: $\alpha \vee \gamma$
         
         $$\frac{ \alpha \vee \beta \vee \gamma, \quad \alpha \vee \neg\beta \vee \gamma}{\alpha \vee \gamma}$$
@@ -298,7 +300,6 @@ In this section, the related work are discussed in the following dimensions:
         \centering
         \begin{tabular}{c c c c}
             \hline
-            \hline
             Dyspnea & Bronc & Either & Pr\\
             \hline
             \hline
@@ -311,7 +312,7 @@ In this section, the related work are discussed in the following dimensions:
             1 & 1 & 0 & 0.8 ($\theta_{3}$)\\
             0 & 1 & 0 & 0.2 ($\theta_{4}$)\\
             \hline
-        \label{table:nyspnea_asia}
+        \label{ta:cpt_Dysp}
         \end{tabular}
         \caption{CPT of node Dysnpea from Asia Network}
         \end{table}
@@ -329,28 +330,29 @@ In this section, the related work are discussed in the following dimensions:
         $Dyspnea_{1} \vee Either_{1} \rightarrow \theta_{1}$\\
         $Dyspnea_{0} \vee Bronc_{0} \vee Either_{0} \rightarrow \theta_{1}$\\
         \end{multicols}
-        Consider the table \ref{table:nyspnea_asia}. Given values to some of the variables, some other variables will become irrelevant, so that it allows the clauses to be simplified. Since Bayesian network variables may have cardinality larger than 2, the resolution for boolean variables were extended for multi\-variate variables.\\
         
-        \cite{2006-enc3} defined a sytax for multiple variable logic:
+        \noindent Consider Table 1. Given values to some of the variables, some other variables will become irrelevant, so that it allows the clauses to be simplified. Since Bayesian network variables may have cardinality larger than 2, the resolution for Boolean variables were extended for multi\-variate variables.\\
+        
+        \cite{2006-enc3} defined a syntax for multiple variable logic:
         \begin{itemize}
         \item An atom is an assignment to a variable in \textbf{X} of a value in the domain.
-        \item A \textit{world} that consits of an atom for each variable, satisfy an atom if and only if it assigns the common variable the same value
+        \item A \textit{world} that consists of an atom for each variable, satisfy an atom if and only if it assigns the common variable the same value
         \item A term over $\textbf{X}' \subseteq \textbf{X}$ is a conjunction of atoms.
         \item $\Gamma$ is a disjunction of terms over X.
         \item An \textit{implicant} $\gamma$ of $\Gamma$ is a term over \textbf{X'} $\subseteq$ \textbf{X} that implies $\Gamma$.
         \item A \textit{prime implicant} is an implicant that is minimal when the removal of any atom will cause in a term that is no longer an implicant of $\Gamma$.
         \end{itemize}
         
-       In boolean logic, QM algorithm aims to simplify Boolean functions. The algorithm was developed by Willard V. Quine and extended by Edward J. McCluskey.\\
+       \noindent In Boolean logic, QM algorithm aims to simplify Boolean functions. The algorithm was developed by Willard V. Quine and extended by Edward J. McCluskey.\\
         
-        In order to generate prime implicants for Bayesian Network variables, the QM algorithm need to be extended. In \cite{2006-enc3}, the paper cited was not found so I extended the QM algorithm in a straightforward way and will be discussed in seciton \textcolor{red}{4.7.2}
+       \noindent In order to generate prime implicants for Bayesian Network variables, the QM algorithm need to be extended. In \cite{2006-enc3}, the paper cited was not found so I extended the QM algorithm in a straightforward way and will be discussed in section 4.7.2
         
         \subsubsection{Cachet Encoding}
-        The Cachet encoding we are refereing to is based on the encoding presented in \cite{Sang:2005:PBI:1619332.1619409}. One of the assumption in this encoding is that there's an ordering on the values for each network variable. We call $x_{i} < x_{j}$ if $x_{i}$ comes earlier in the variable value.\\
+        The Cachet encoding we are referring to is based on the encoding presented in \cite{Sang:2005:PBI:1619332.1619409}. One of the assumption in this encoding is that there's an ordering on the values for each network variable. We call $x_{i} < x_{j}$ if $x_{i}$ comes earlier in the variable value.\\
         
-        Cachet Encoding provide same indicator variables as Full encoding. For the parameter in a nerwork Pr($x|Y$), when x is not the latest value in X, define a parameter variable $\rho_{x|Y}$.
+        \noindent Cachet Encoding provide same indicator variables as Full encoding. For the parameter in a network Pr($x|Y$), when x is not the latest value in X, define a parameter variable $\rho_{x|Y}$.\\
         
-        Then the Cachet encoding \textbf{define the CNFs}: Cachet encoding generate the same indicator clauses as Full encoding. For each network variable, Cachet encoding provide the following clauses for parameter value $Pr(x_{i}|y_{1}, ... , y_{m})$.
+        \noindent Then the Cachet encoding \textbf{define the CNFs}: Cachet encoding generate the same indicator clauses as Full encoding. For each network variable, Cachet encoding provide the following clauses for parameter value $Pr(x_{i}|y_{1}, ... , y_{m})$.
         \begin{itemize}
             \item If x is not X's last value: $$\lambda_{y_{1}} \wedge ... \wedge \lambda_{y_{m}} \wedge \neg \rho x_{1|Y} \wedge \neg \rho x_{i-1|Y} \wedge \rho_{x_{i}|Y} \rightarrow \lambda_{x_{i}}$$
             \item If x is X's last value:
@@ -364,15 +366,14 @@ In this section, the related work are discussed in the following dimensions:
             \centering
             \begin{tabular}{c l}
                 \hline
-                \hline
                 Node Variables	&	Encoded clauses	\\
+                \hline
                 \hline
                 $X_{1}$	&	$\neg c_{0} \wedge \neg c_{1}$	\\
                 $X_{2}$	&	$\neg c_{0} \wedge c_{1}$	\\
                 $X_{3}$	&	$ c_{0} \wedge \neg c_{1}$	\\
                 \hline
                 Exclude extra enc: & $c_{0} \vee  c_{1}$\\
-                \hline
                 \hline
             \end{tabular}
             \caption{An example log encoding of indicator variables}
@@ -386,7 +387,7 @@ In this section, the related work are discussed in the following dimensions:
             \item If the parameter value Pr($\theta_{m}$) $\neq$ 0: $\bigvee \neg \tau(X, d) \vee \theta_{m}$ 
         \end{itemize}
         
-        Then we consider the weight assigning rules. After multi-variable simplification is performed within a CPT, select the remained non-zero parameter $\theta_{j}$ that is the most frequent as the scaling factor for the weights, and use $W_{\theta_{j}}$ to denote the scaling variable. For all parameter vairiable $\theta_{i}\; i \neq j$, 
+        \noindent Then we consider the weight assigning rules. After multi-variable simplification is performed within a CPT, select the remained non-zero parameter $\theta_{j}$ that is the most frequent as the scaling factor for the weights, and use $W_{\theta_{j}}$ to denote the scaling variable. For all parameter vairiable $\theta_{i}\; i \neq j$, 
         $$W(\theta_{i}) = \frac{OriginalWeight(\theta_{i})}{W(\theta_{j})}$$
         For negative parameter variables:
         $$W(\neg \theta_{i}) = 1 - W(\theta_{i})$$
@@ -412,7 +413,7 @@ In this section, the related work are discussed in the following dimensions:
         $\neg A \vee \neg D \vee E$\\
     \end{center}
     
-    The Figure \ref{fig:searchfig} shows the result after splitting.
+   \noindent  The Figure \ref{fig:searchfig} shows the result after splitting.\\
     
     \begin{figure}
         \centering
@@ -421,32 +422,32 @@ In this section, the related work are discussed in the following dimensions:
         \label{fig:searchfig}
     \end{figure}
     
-    Compared to the Compile-based model counters, model counters by searching require less computational space. One of the most widely search\-based model counter is called cachet proposed in \cite{Cachet}, combined with the encoding method we discussed in \textcolor{red}{1.2.5 Cachet Encoding}, it showed strong ability to perform probabilistic inference and the result was demonstrated in \cite{Sang:2005:PBI:1619332.1619409}\\
+   \noindent  Compared to the Compile-based model counters, model counters by searching require less computational space. One of the most widely search\-based model counter is called cachet proposed in \cite{Cachet}, combined with the encoding method we discussed in 1.2.5 Cachet Encoding, it showed strong ability to perform probabilistic inference and the result was demonstrated in \cite{Sang:2005:PBI:1619332.1619409}\\
     
     \noindent \textbf{SharpSAT:}\\
-    Similar to Cachet, the SharpSAT first proposed in \cite{Sharp-SAT2006} used the DPLL algorithm \\
-    Some of the algorithms such as \textcolor{red}{DPLL with caching: a NEW ....} improved the performance using techniqes such as Component Caching
+    Similar to Cachet, the SharpSAT first proposed in \cite{Sharp-SAT2006} used the DPLL algorithm. SharpSAT model counter improved the performance using techniques such as Component Caching and cache management. Compared to Cachet, SharpSAT make use of implicit Boolean constain propogation that result in smaller search space to save the cache space.
+    
     \subsubsection{Compile based model counter}
     Another categrory of model counter use knowledge compilation, which the process aims to compile one type logic form into another one.\cite{2008-literature-review} In \cite{2002language-map}, a \textit{represented language} (such as CNF) is defined as sth we expect human to read and write without too much effort, and the \textit{target compilation langauge} are in the form such that it can repond queried in poly\-time. Some of the widely used compile\-based model counters are C2D and miniC2D.\\
     
-    \textbf{C2D}:\\
-    C2d was deveploped by \textcolor{red}{UCLA Reasoning group}. In \cite{c2d}, the CNF of a Bayesian network, encoded using Full Encoding discussed above, was compiled in to d\-DNNF, and this is a form of knowledge representation knowledge that support model counitng in poly\-time to the size of the input compiled form (d\-DNNF) \cite{2002language-map}.\\
+    \noindent \textbf{C2D}:\\
+    C2d was deveploped by UCLA Reasoning group. In \cite{c2d}, the CNF of a Bayesian network, encoded using Full Encoding discussed above, was compiled in to d\-DNNF, and this is a form of knowledge representation knowledge that support model counitng in poly\-time to the size of the input compiled form (d\-DNNF) \cite{2002language-map}.\\
     
-    Model counting require three property, decomposition, determinism, and smoothness which is satisfied by d\-DNNF. Compiling CNF into d\-DNNF will support weighted model counting by traversing the d\-DNNF and multiply or add the results.\\
+    \noindent Model counting require three property, decomposition, determinism, and smoothness which is satisfied by d\-DNNF. Compiling CNF into d\-DNNF will support weighted model counting by traversing the d\-DNNF and multiply or add the results.\\
     
-    \textbf{mini-C2D}:\\
-    The model counter mini\-C2D was proposed in \cite{minic2d}. Minic2d is a top\-down compiler that given the CNF clauses as input, it compile the CNF into Sentential Decision Diagram (SDD).\\
+    \noindent \textbf{mini-C2D}:\\
+    \noindent The model counter mini\-C2D was proposed in \cite{minic2d}. Minic2d is a top\-down compiler that given the CNF clauses as input, it compile the CNF into Sentential Decision Diagram (SDD).\\
     
-    One of the main disadvantages is that the compiled file size can be larger than the available memory, futher results are shown in the Results and analysis in \textcolor{red}{Section 7.6}.
+   \noindent One of the main disadvantages is that the compiled file size can be larger than the available memory, futher results are shown in the Results and analysis in Section 7.6.
     
     \subsection{Selection and decision}
-    In this project, I implemented the encoding schemes including Full encoding, Simplified Full encoding, Improved encoding and Group encoding, and I used the miniC2D for model counting. \\
+    In this project, we implemented the encoding schemes including Full encoding, Simplified Full encoding, Improved encoding and Group encoding, and I used the miniC2D for model counting. \\
     
-    The four encoding schemes are closely related to each other and perform improvement step by step. Thus, it is more fair to compare the performance during the model counting phase.\\
+    \noindent The four encoding schemes are closely related to each other and perform improvement step by step. Thus, it is more fair to compare the performance during the model counting phase.\\
     
-    The model counting tool is miniC2D. The model counting tool is can be run cross platform under both macOS and linux. The weight is formatted in a simpler way in one line compared to other available model counters. In addition, according to \cite{minic2d}, the performance is among the best.\\
+    \noindent The model counting tool is miniC2D. We chose miniC2D because it is a cross platform software package that support both MacOS and Linux. The weight is formatted in a simpler way in one line compared to other available model counters. In addition, according to \cite{minic2d}, the performance is among the best.\\
     
-    In \cite{2008-literature-review}, the combining of the four encoding schemes and compiled based model counters give strong performance and good results. It is reasonable to expect the newer model counter miniC2D can perform equally strong for the benchmark problems.
+    \noindent In \cite{2008-literature-review}, the combining of the four encoding schemes and compiled based model counters give strong performance and good results. It is reasonable to expect the newer model counter miniC2D can perform equally strong for the benchmark problems.
     
     % \subsubsection{Cachet and C2D model counter}
     % Cachet is a search based model counter \cite{Cachet}. The idea behind is to decompose the CNF clauses into several components that does not share variables, so that each component can be counted separately. When all the clauses share some same variables, splitting is required to force the decomposition. \\\par

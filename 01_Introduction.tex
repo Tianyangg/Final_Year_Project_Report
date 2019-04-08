@@ -2,29 +2,21 @@
 \section{Introduction}
     \subsection{Motivation}
     Bayesian Networks are probabilistic graphical models that represent a set of variables and their conditional dependencies.
-    \textcolor{red}{Bayesian inference is based on solid rules of probability calculus such that all the assumptions are contained in the model.} Bayesian inference is that, given observations of some model variables, compute the posterior probabilities. it is widely used in game theory, stability testing and medical diagnosis. \\
+   Bayesian inference is that, given observations of some model variables, compute the posterior probabilities, and it is widely used in game theory, stability testing, and medical diagnosis. \\
     
-    \noindent There are some existing methods for performing exact Bayesian inference. Some common methods for exact inference are Variable elimination and junction tree algorithms, while for some large scale bayesian networks, the inference is  time consuming. In \cite{enc1}, the author presented a method which perform Bayesian inference with Weighted Model Counting by encoding Bayesian networks into logic forms. This encoding method can also be used to encode other probabilistic graphical models such as Markov chains \cite{2008-literature-review}, and performing weighted model counting has been experimented to outperform junction tree algorithm for the Bayesian networks by capturing some of its local structures.\\
+    \noindent There are some existing methods for performing exact Bayesian inference. Some conventional techniques for exact inference are Variable elimination and junction tree algorithms, while for some large scale Bayesian networks, the inference is time-consuming. In \cite{enc1}, the author presented a method which performs Bayesian inference with Weighted Model Counting by encoding Bayesian networks into logic forms. This encoding method can also be used to encode other probabilistic graphical models such as Markov chains \cite{2008-literature-review}, and performing weighted model counting has been experimented to outperform junction tree algorithm for the Bayesian networks by capturing some of its local structures.\\
     
-    \noindent Current Bayesian inference software package is mainly based on Variable Elimination and Junction tree methods. For example, in the software BayesiaLab \footnote{https://library.bayesia.com/display/BlabC/Inference}, the inference is implemented using Junction tree algorithm, as a result, dealing with large and complex Bayesian Networks are time and space costly. There's a notable lack of implemented method for Bayesian inference with the weighted model counting method, and this is the gap this project aims to fill.
+    \noindent Current Bayesian inference software package is mainly based on Variable Elimination and Junction tree methods. For example, in the software BayesiaLab \footnote{https://library.bayesia.com/display/BlabC/Inference}, the inference is implemented using Junction tree algorithm. As a result, dealing with large and complex Bayesian Networks are time and space costly. There's a notable lack of an implemented method for Bayesian inference with the weighted model counting method, and this is the gap this project aims to fill.
     
     %what was done, achieved and discovered
     \subsection{Project Aims}
-    This aim of this project is to investigate existing methods that reduce Bayesian inference to weighted model counting problem and implement encoding schemes. The purpose of this is to turn the current research into program that can be further intergrated with software package that deal with Bayesian inference.\\
+    This aim of this project is to investigate existing methods that reduce Bayesian inference to weighted model counting problem and implement encoding schemes. The purpose of this is to turn the current research into a program that can be further integrated with a software package that deals with Bayesian inference.\\
     
     \noindent During the project, we first gained a full understanding of Bayesian Networks and weighted model counting. Then we investigated existing algorithms to represent Bayesian Networks as CNFs, among which Four of the encoding methods were selected. Finally, we tested several model counters and evaluated the four encoding schemes with the model counting software package miniC2D.\\
     
-    \noindent The evaluation showed that performing Bayesian inference with weighted model counting perform significantly better when dealing with large scale Bayesian networks with large deterministic, and each of the encoding scheme has its own strength and weakness. The result is discussed in section 7. 
-
-    % The goals of this project are listed below:
-    % \begin{itemize}
-    %     \item Understand both Bayesian Networks and Weighted Model Counting.
-    %     \item Explore and compare the existing encoding algorithms that encode Bayesian Networks to Conjunctive Normal Forms.
-    %     \item Explore different Model Counting tools.
-    %     \item Implemented three encoding schemes in \cite{enc1,enc2,2006-enc3}.
-    %     \item Experiment the encoding schemes by encoding both benchmarks and real examples.
-    %     \item Evaluate the performance of the encoding schemes by feeding the encoding output to the model counter.
-    % \end{itemize}
+    \noindent The evaluation showed that performing Bayesian inference with weighted model counting perform significantly better when dealing with large scale Bayesian networks with large deterministic, and each of the encoding schemes has its strength and weakness. The result is discussed in section 7. 
+    
+    
 
     \subsection{The structure of the report}
     The report will contain:

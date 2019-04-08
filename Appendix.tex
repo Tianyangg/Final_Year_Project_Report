@@ -1,7 +1,21 @@
 \newpage
 \appendix
-\section*{How to run}
-\subsection*{Encoding}
+\section*{Appendix}
+\subsection{File Structure}
+The Git repository contains the folder, some of the benchmarks and some testing results. The source code for encoding is in the subfolder Bayesian \_V1. To run the encoding, open main.py. Before running the encoding, we need to change the file path in line 198 to point to the .bif file we want to encode. \\
+\begin{itemize}
+    \item enc1\_simplified\_2(Bayesian Network) encode the Bayesian network using Simplified Full Encoding.
+    \item enc2\_simplified\_2(Bayesian Network) encode the Bayesian network using Improved Encoding.
+    \item encode\_3(Bayesian Network) encode the Bayesian network using Group encoding.
+\end{itemize}
+
+\noindent Some of the benchmarks are stored under Ratio\_50, Ratio\_75 and Ratio\_90. It also contains some of the Compiled NNF file with and extension '.cnf.nnf'.
+
+\subsection*{Pgmpy and QM}
+The link to download Pgmpy is \url{https://github.com/pgmpy/pgmpy}. To run the code, the folder need to be added to the project.\\
+
+The link to download QM is \url{http://robertdick.org/python/qm-0.2.tar.gz}. After downloading the file, unzip it and copy the qm.py to the project.
+
 
 \subsection*{Running miniC2D}
 To download the model counter, go to page \textcolor{blue}{http://reasoning.cs.ucla.edu/minic2d/download.php}\\

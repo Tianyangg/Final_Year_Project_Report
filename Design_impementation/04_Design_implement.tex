@@ -9,11 +9,11 @@ This section is dedicated to explaining the language and library used in impleme
     \subsection{Simplified Full encoding}
     In simplified Full encoding, one of the main improvement is to capture the extreme values when generating the parameter clauses. Before generating variables and clauses, the weight is fetched from the Probabilty table.\\
     \newline
-    If Pr($variable_{i}|evidence_{1}...evidence-{m}$) = 0, the parameter clauses won't be generated, and only one clause will be appended to the CNF: [$\neg \lambda_{variable_{i}|}, \neg \lambda_{evidence_{1}}, ..., \neg \lambda_{evidence_{m}}$].\\
+    \noindent If Pr($variable_{i}|evidence_{1}...evidence-{m}$) = 0, the parameter clauses won't be generated, and only one clause will be appended to the CNF: [$\neg \lambda_{variable_{i}|}, \neg \lambda_{evidence_{1}}, ..., \neg \lambda_{evidence_{m}}$].\\
     
-    If Pr($variable_{i}|evidence_{1}...evidence-{m}$) = 1, no action is done and the program should move to the next entry of the probability table.\\
+    \noindent If Pr($variable_{i}|evidence_{1}...evidence-{m}$) = 1, no action is done and the program should move to the next entry of the probability table.\\
     
-    The psuedocode for simplifying extreme values with evidence list not empty is given below, the case without evidence can be implemented similarly.
+    \noindent The psuedocode for simplifying extreme values with evidence list not empty is given below, the case without evidence can be implemented similarly.
     \begin{minted}
     [linenos]
     {python}
@@ -34,7 +34,7 @@ This section is dedicated to explaining the language and library used in impleme
                     do the same as Full encode parameter clauses
         
     \end{minted}
-    According to \cite{enc1}, the simplification step lead to significant improvement in the number of clauses which directly influence the time and space usage in the model counting phase. Detailed result is discussed later in the Result section \textcolor{red}{result section number}
+    According to \cite{enc1}, the simplification step lead to significant improvement in the number of clauses which directly influence the time and space usage in the model counting phase. Detailed result is discussed later in the Result section.
     
     \subsection{Implementation of Improved Encoding}
     The idea of Improved encoding is to use same logic variable to encode the parameter variables that have the same value in the CPT. For each node in the Bayesian network, the table is first partitioned in to several sub-tables based on the non-extreme probability values. This can be done with the sorting within the table fetched by myCPD(TabularCPD) method. After the partition of the table, an encoding scheme for paramter values and clauses is described.
@@ -68,14 +68,14 @@ This section is dedicated to explaining the language and library used in impleme
     \end{algorithm}
     \subsection{Implementation of Group Encoding}
     \subsubsection{QM algorithm}
-    QM algorithm, proposed by Quine and McClusckey, is an algorithmic way of simplifying boolean logic functions. The library for QM algorithm applied for binary variables was used and extended to support the simplification for multi-variables.
+    QM algorithm, proposed by Quine and McClusckey, is an algorithmic way of simplifying Boolean logic functions. The library for QM algorithm applied for binary variables were used and extended to support the simplification for multi-variables.
     
     \subsubsection{An extension of QM algorithm for multi-variate simplification}
-    To simplify multi\-variate Bayesian network variables, the QM algorithm was extended.\\
+    To simplify multi\-variate Bayesian network variables, the QM algorithm were extended.\\
     
-    For the variables in the CPT, a fixed length of bit string is used to represent the combination of variable. The length of bit string depends on the cardinality of each variable. 
+    \noindent For the variables in the CPT, a fixed length of bit string is used to represent the combination of variable. The length of bit string depends on the cardinality of each variable. 
     $$total\_length = \Sigma_{i = 1}^{m} \lceil log_{2}(Cardinality(Var_{i}))\rceil$$
-    The bit string is then transformed from binary to decimal numbers as the input of QM algorithm. Then the output is splitted into small binary groups same as the length used to encode each varible. 'X' means the don't care case. If given values of for the other variables, the variable contains the don't care case will have a uniform probability or irrelevant, variable can be removed from the clause . An example is given below:\\
+    The bit string is then transformed from binary to decimal numbers as the input of QM algorithm. Then the output is spitted into small binary groups same as the length used to encode each variable. 'X' means the don't care case. If given values of for the other variables, the variable contains the don't care case will have a uniform probability or irrelevant, variable can be removed from the clause. Table \ref{tab:QM encode} gives and example for the extension. \\
     
     \begin{table}[]
         \centering
@@ -92,12 +92,12 @@ This section is dedicated to explaining the language and library used in impleme
             \hline
         \end{tabular}
         \caption{An example of encoding using dysp node in asia.bif}
-        \label{tab:my_label}
+        \label{tab:QM encode}
     \end{table}
     
-    This extension of the QM algorithm won't simplify the clauses into the most essential prime implicants for variables with cardinality $\>$ 2, while it the simplification of the encoding result already lead to significant improvement into number of clauses.\\
+    \noindent This extension of the QM algorithm won't simplify the clauses into the most essential prime implicants for variables with cardinality $\>$ 2, while it the simplification of the encoding result already lead to significant improvement into number of clauses.\\
     
-    Smaller clauses may be generated if we apply the algorithm multiple times while the runtime of QM algorithm is exponential to the size of variables. Therefore, the algorithm is only applied once for each subgroup of the CPD.\\
+    \noindent Smaller clauses may be generated if we apply the algorithm multiple times while the runtime of QM algorithm is exponential to the size of variables. Therefore, the algorithm is only applied once for each subgroup of the CPD.\\
     
     \begin{lstlisting}
     An example process using the table mentioned above
@@ -110,7 +110,7 @@ This section is dedicated to explaining the language and library used in impleme
                             [Dyspnea_1, Either_1)]]
     \end{lstlisting}
     
-    The output of the extendedQM(subgroup) is the simplified implicants of the subgroup. For each output, the following encoding steps are used to generated clauses:
+    \noindent The output of the extendedQM(subgroup) is the simplified implicants of the subgroup. For each output, the following encoding steps are used to generated clauses:
     
     \begin{algorithm}
     \caption{Group Encoding for each subgroup}\label{algorithm:group encoding}

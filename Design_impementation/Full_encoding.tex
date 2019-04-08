@@ -3,7 +3,7 @@
     \begin{itemize}
         \item \textit{var\_dic} is a dictionary in which the key is the name of the variable and the value is used when the cnf is written into the DIMACS format. 
         \item \textit{clauses} is a nested list, each element correspond to one clauses in the generated CNF. Literals are stores as a tuple (sign, variable). sign = -1 means the negation of the variable
-        \item \textit{weights} is a dictionary that stores the corresponding weights of the variable following the weights assigning rules mentioned in \textcolor{red}{WHICH SECTION}. The key is the name of the variable such as $\lambda_{dysp_{0}}$ and the value is the corresponding weight.
+        \item \textit{weights} is a dictionary that stores the corresponding weights of the variable following the weights assigning rules mentioned in section 3.2.2. The key is the name of the variable such as $\lambda_{dysp_{0}}$ and the value is the corresponding weight.
     \end{itemize}
     \textbf{Generating Indicator variables:}\\
     Given a bayesian network \textit{bn}, for each node in the network, define the number of indicators same as its cardinality. Then two types of clauses are generated: $[\lambda_{x_{1}}, ... \lambda_{x_{n}}]$ and $[\neg \lambda_{x_{i}}, \neg \lambda_{x_{j}}]$ when $i < j$. weights($\lambda_{x}$) = 1, weights($\neg \lambda_{x}$) = -1. Traverse the node in the given Bayesian network and all indicator clauses are generated.
